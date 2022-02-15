@@ -33,6 +33,10 @@ public class KExceptionHelper {
         return new KException(HttpStatus.FORBIDDEN, message);
     }
     
+    public static KException iAmATeapot(final String message) {
+        return new KException(HttpStatus.I_AM_A_TEAPOT, message);
+    }
+    
     public static KException createByStatusCode(final int statusCode, final String message) {
         switch (statusCode) {
             case 200:
@@ -59,6 +63,8 @@ public class KExceptionHelper {
                 return new KException(HttpStatus.NOT_FOUND, message);
             case 405:
                 return new KException(HttpStatus.METHOD_NOT_ALLOWED, message);
+            case 418:
+                return new KException(HttpStatus.I_AM_A_TEAPOT, message);
             case 429:
                 return new KException(HttpStatus.TOO_MANY_REQUESTS, message);
             case 500:

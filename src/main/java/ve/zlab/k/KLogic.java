@@ -2044,6 +2044,18 @@ public class KLogic {
             }, " ")
         };
     }
+    
+    public static String[] whereNotExists(final KQuery kQuery) throws KException {
+        if (kQuery == null) {
+            return null;
+        }
+
+        return new String[]{
+            AND, StringUtils.join(new String[]{
+                "NOT EXISTS (", kQuery.toSubquery(), ")"
+            }, " ")
+        };
+    }
 
     public static String[] where(final KWhere kWhere) {
         if (kWhere == null || kWhere.isEmpty()) {
@@ -2688,6 +2700,18 @@ public class KLogic {
         return new String[]{
             OR, StringUtils.join(new String[]{
                 "EXISTS (", kQuery.toSubquery(), ")"
+            }, " ")
+        };
+    }
+    
+    public static String[] orWhereNotExists(final KQuery kQuery) throws KException {
+        if (kQuery == null) {
+            return null;
+        }
+
+        return new String[]{
+            OR, StringUtils.join(new String[]{
+                "NOT EXISTS (", kQuery.toSubquery(), ")"
             }, " ")
         };
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class KJoin {
     
@@ -255,6 +256,142 @@ public abstract class KJoin {
             where.add(w);
         }
         
+        return this;
+    }
+    
+    public KJoin whereLessThanOrEqualTo(final String c, final Object v) {
+        final String w = KLogic.joinWhere(KLogic.whereLessThanOrEqualTo(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(v);
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
+    public KJoin whereGreaterThanOrEqualTo(final String c, final Object v) {
+        final String w = KLogic.joinWhere(KLogic.whereGreaterThanOrEqualTo(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(v);
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
+    public KJoin whereLikeAny(final String c, final String v) {
+        final String w = KLogic.joinWhere(KLogic.whereLike(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(StringUtils.join(new String[]{
+                "%", v, "%"
+            }, ""));
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
+    public KJoin orWhereLikeAny(final String c, final String v) {
+        final String w = KLogic.joinWhere(KLogic.orWhereLike(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(StringUtils.join(new String[]{
+                "%", v, "%"
+            }, ""));
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+
+    public KJoin whereNotLikeAny(final String c, final String v) {
+        final String w = KLogic.joinWhere(KLogic.whereNotLike(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(StringUtils.join(new String[]{
+                "%", v, "%"
+            }, ""));
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
+    public KJoin orWhereNotLikeAny(final String c, final String v) {
+        final String w = KLogic.joinWhere(KLogic.orWhereNotLike(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(StringUtils.join(new String[]{
+                "%", v, "%"
+            }, ""));
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+
+    public KJoin whereILikeAny(final String c, final String v) {
+        final String w = KLogic.joinWhere(KLogic.whereILike(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(StringUtils.join(new String[]{
+                "%", v.toUpperCase(), "%"
+            }, ""));
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
+    public KJoin orWhereILikeAny(final String c, final String v) {
+        final String w = KLogic.joinWhere(KLogic.orWhereILike(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(StringUtils.join(new String[]{
+                "%", v.toUpperCase(), "%"
+            }, ""));
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+
+    public KJoin whereNotILikeAny(final String c, final String v) {
+        final String w = KLogic.joinWhere(KLogic.whereNotILike(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(StringUtils.join(new String[]{
+                "%", v.toUpperCase(), "%"
+            }, ""));
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
+    public KJoin orWhereNotILikeAny(final String c, final String v) {
+        final String w = KLogic.joinWhere(KLogic.orWhereNotILike(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(StringUtils.join(new String[]{
+                "%", v.toUpperCase(), "%"
+            }, ""));
+
+            this.where.add(w);
+        }
+
         return this;
     }
 

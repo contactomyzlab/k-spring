@@ -43,6 +43,12 @@ public class QueryJPA implements IQuery {
         
         try {
             result = query.getSingleResult();
+            
+            if (result == null) {
+                return new KRow(new Object[]{
+                    null
+                }, columns, table);
+            }
 
             return new KRow((Object[]) result, columns, table);
         } catch (NoResultException | NonUniqueResultException e) {

@@ -2688,11 +2688,29 @@ public class KQuery {
         final String[] w = KLogic.whereExists(kQuery);
 
         if (w != null) {
-//            final List<Object> objects = kQuery.getkContext().getParams();
-//            
-//            for (final Object o : objects) {
-//                this.kContext.addParam(o);
-//            }
+            final List<Object> objects = kQuery.getkContext().getParams();
+            
+            for (final Object o : objects) {
+                this.kContext.addParam(o);
+            }
+
+            this.where.add(w);
+        } else {
+            whereNullsCount++;
+        }
+
+        return this;
+    }
+    
+    public KQuery whereNotExists(final KQuery kQuery) throws KException {
+        final String[] w = KLogic.whereNotExists(kQuery);
+
+        if (w != null) {
+            final List<Object> objects = kQuery.getkContext().getParams();
+            
+            for (final Object o : objects) {
+                this.kContext.addParam(o);
+            }
 
             this.where.add(w);
         } else {
@@ -2706,11 +2724,29 @@ public class KQuery {
         final String[] w = KLogic.orWhereExists(kQuery);
 
         if (w != null) {
-//            final List<Object> objects = kQuery.getkContext().getParams();
-//            
-//            for (final Object o : objects) {
-//                this.kContext.addParam(o);
-//            }
+            final List<Object> objects = kQuery.getkContext().getParams();
+            
+            for (final Object o : objects) {
+                this.kContext.addParam(o);
+            }
+
+            this.where.add(w);
+        } else {
+            whereNullsCount++;
+        }
+
+        return this;
+    }
+    
+    public KQuery orWhereNotExists(final KQuery kQuery) throws KException {
+        final String[] w = KLogic.orWhereNotExists(kQuery);
+
+        if (w != null) {
+            final List<Object> objects = kQuery.getkContext().getParams();
+            
+            for (final Object o : objects) {
+                this.kContext.addParam(o);
+            }
 
             this.where.add(w);
         } else {
