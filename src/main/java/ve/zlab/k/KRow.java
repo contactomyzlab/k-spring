@@ -298,7 +298,7 @@ public class KRow {
         return true;
     }
     
-    public Boolean isNull(final String c) {
+    public boolean isNull(final String c) {
         if (o == null) {
             return true;
         }
@@ -312,7 +312,7 @@ public class KRow {
         return o[n] == null;
     }
     
-    public Boolean isNull(final int n) {
+    public boolean isNull(final int n) {
         if (o == null) {
             return true;
         }
