@@ -33,7 +33,7 @@ public class ListPropertyStringDoubleBetween extends KRule {
                 return;
             }
             
-            throw new Exception("");
+            throw new Exception(message);
         } catch (Exception e) {
             throw KExceptionHelper.badRequest(message);
         }

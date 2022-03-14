@@ -37,6 +37,7 @@ public class KRule {
     public static int INTEGER_IN = 34;
     public static int STRING_IN = 35;
     public static int DOUBLE_GREATER_THAN_OR_EQUAL_TO = 36;
+    public static int LIST_PROPERTY_OBJECT_NOT_NULL = 37;
     
     protected String message;
     private int rule;

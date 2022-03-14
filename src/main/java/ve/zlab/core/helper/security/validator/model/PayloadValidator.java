@@ -183,6 +183,14 @@ public class PayloadValidator {
                     case 36: //KRule.DOUBLE_GREATER_THAN_OR_EQUAL_TO
                         ((DoubleGreaterThanOrEqualTo) rule).validate((Double) value);
                         break;
+                    case 37: //KRule.LIST_PROPERTY_OBJECT_NOT_NULL
+                        final List<Object> list37 = (List<Object>) value;
+                        
+                        for (final Object object : list37) {
+                            ((ListPropertyObjectNotNull) rule).validate(object);
+                        }
+                        
+                        break;
                     default:
                 }
             }

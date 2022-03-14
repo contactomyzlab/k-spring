@@ -158,6 +158,13 @@ public class KRuleHelper {
         
         public static class Property {
         
+            public static class ObjectRule {
+                
+                public static ListPropertyObjectNotNull assertNotNull(final String message) {
+                    return new ListPropertyObjectNotNull(message);
+                }
+            }
+            
             public static class StringRule {
 
                 public static ListPropertyStringParseableToDouble assertParseableToDouble(final String property, final String message) {
