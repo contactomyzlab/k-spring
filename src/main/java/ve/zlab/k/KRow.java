@@ -517,6 +517,12 @@ public class KRow {
     }
     
     public void set(final String property, KRowFunction kRowFunction) throws KException {
+        if (kRowFunction == null) {
+            this.o[ref.get(property)] = null;
+            
+            return;
+        }
+        
         this.o[ref.get(property)] = kRowFunction.run(this);
     }
     

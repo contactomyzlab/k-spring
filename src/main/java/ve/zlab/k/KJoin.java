@@ -283,6 +283,54 @@ public abstract class KJoin {
         return this;
     }
     
+    public KJoin whereLessThan(final String c, final Object v) {
+        final String w = KLogic.joinWhere(KLogic.whereLessThan(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(v);
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+
+    public KJoin orWhereLessThan(final String c, final Object v) {
+        final String w = KLogic.joinWhere(KLogic.orWhereLessThan(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(v);
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
+    public KJoin whereGreaterThan(final String c, final Object v) {
+        final String w = KLogic.joinWhere(KLogic.whereGreaterThan(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(v);
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+
+    public KJoin orWhereGreaterThan(final String c, final Object v) {
+        final String w = KLogic.joinWhere(KLogic.orWhereGreaterThan(c, v));
+
+        if (w != null) {
+            this.kContext.addParam(v);
+
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
     public KJoin whereLikeAny(final String c, final String v) {
         final String w = KLogic.joinWhere(KLogic.whereLike(c, v));
 

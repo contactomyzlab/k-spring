@@ -241,6 +241,16 @@ public class KQuery {
         return this;
     }
     
+    public KQuery using(final Class<? extends KModel> usingClazz) {
+        if (usingClazz == null) {
+            return null;
+        }
+
+        this.using.add(KModel.tableWithAlias(usingClazz));
+
+        return this;
+    }
+
     public KQuery innerJoinSub(final KQuery kQuery, final String alias, final KJoin kJoin) throws KException {
         if (kQuery == null) {
             return null;

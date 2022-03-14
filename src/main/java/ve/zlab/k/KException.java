@@ -2,7 +2,7 @@ package ve.zlab.k;
 
 import org.springframework.http.HttpStatus;
 
-public class KException extends Exception {
+public class KException extends RuntimeException {
 
     private final HttpStatus status;
 
