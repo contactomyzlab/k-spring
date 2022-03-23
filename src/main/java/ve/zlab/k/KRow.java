@@ -284,6 +284,24 @@ public class KRow {
         return (Double) o[n];
     }
     
+    public byte[] getBytea(final String c) {
+        final Integer n = ref.get(c);
+        
+        if (n == null) {
+            return null;
+        }
+        
+        return this.getBytea(n);
+    }
+    
+    public byte[] getBytea(final int n) {
+        if (n >= o.length) {
+            return null;
+        }
+        
+        return (byte[]) o[n];
+    }
+    
     public Boolean isPresent(final String c) {
         if (o == null) {
             return false;

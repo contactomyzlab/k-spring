@@ -85,6 +85,7 @@ public class KQuery {
     private Integer indexColumn;
     private Map<String, Integer> columns;
     private Map<String, String> processors;
+    private Map<String, String> extraColumnsToInsert;
     private boolean onConflictDoNothing;
     
     public KQuery(final String table, final boolean function, final ITransaction transaction) {
@@ -131,6 +132,7 @@ public class KQuery {
         this.indexColumn = 0;
         this.whereNullsCount = 0;
         this.processors = new HashMap<>();
+        this.extraColumnsToInsert = new HashMap<>();
         this.onConflictDoNothing = false;
     }
     
@@ -140,6 +142,16 @@ public class KQuery {
         }
         
         this.processors.put(key, value);
+
+        return this;
+    }
+    
+    public KQuery addExtraColumnsToInsert(final String key, final String value) throws KException {
+        if (key == null || value == null) {
+            return this;
+        }
+        
+        this.extraColumnsToInsert.put(key, value);
 
         return this;
     }
@@ -4086,8 +4098,14 @@ public class KQuery {
         if (kModel == null) {
             throw KExceptionHelper.internalServerError("The KModel cannot be null");
         }
+        
+        final Map<String, Object> d = kModel.toMap();
+        
+        if (!extraColumnsToInsert.isEmpty()) {
+            d.putAll(extraColumnsToInsert);
+        }
 
-        final String ql = KLogic.buildInsertInto(this, kModel.toMap(), this.processors, true, kModel.getNameColumnId());
+        final String ql = KLogic.buildInsertInto(this, d, this.processors, true, kModel.getNameColumnId());
 
         final IQuery query = transaction.createNativeQuery(ql);
 
