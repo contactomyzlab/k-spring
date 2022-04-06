@@ -215,6 +215,10 @@ public class KRow {
             return null;
         }
         
+        if (o[n] == null) {
+            return null;
+        }
+        
         if (o[n] instanceof BigInteger) {
             return ((BigInteger) o[n]).longValue();
         }
@@ -234,6 +238,10 @@ public class KRow {
     
     public Integer getInteger(final int n) {
         if (n >= o.length) {
+            return null;
+        }
+        
+        if (o[n] == null) {
             return null;
         }
         
