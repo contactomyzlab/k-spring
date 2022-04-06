@@ -4647,11 +4647,13 @@ public class KQuery {
             throw KExceptionHelper.internalServerError("The KModel cannot be null");
         }
         
-        if (whereNullsCount > 0) {
-            throw KExceptionHelper.internalServerError("The query cannot be executed for protection. A condition has a null value");
+        final Map<String, Object> d = kModel.toMap();
+        
+        if (!extraColumnsToInsert.isEmpty()) {
+            d.putAll(extraColumnsToInsert);
         }
         
-        System.out.println(KLogic.buildInsertInto(this, kModel.toMap(), new HashMap<>(), true, kModel.getNameColumnId()));
+        System.out.println(KLogic.buildInsertInto(this, d, new HashMap<>(), true, kModel.getNameColumnId()));
 
         int i = 1;
 
