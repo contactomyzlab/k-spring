@@ -161,6 +161,14 @@ public class KRow {
             return null;
         }
         
+        if (o[n] == null) {
+            return null;
+        }
+        
+        if (o[n] instanceof String) {
+            return UUID.fromString((String) o[n]);
+        }
+        
         return (UUID) o[n];
     }
     
