@@ -17,7 +17,7 @@ public class KPostgreSQL10Dialect extends PostgreSQL10Dialect {
         switch (sqlTypeDescriptor.getSqlType()) {
             case 1111:
                 return VarcharTypeDescriptor.INSTANCE;
-            }
+        }
         
         return super.remapSqlTypeDescriptor(sqlTypeDescriptor);
     }

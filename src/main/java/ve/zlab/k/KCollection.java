@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -882,6 +883,10 @@ public class KCollection {
         this.ref.put(property, this.ref.entrySet().size());
         
         return this;
+    }
+    
+    public Iterator<KRow> iterator() {
+        return collection.iterator();
     }
     
     public <T, V> Map<T, V> twoColumnsToMap(final String key, final String value, final Class<T> clazzT, final Class<V> clazzV) throws KException {

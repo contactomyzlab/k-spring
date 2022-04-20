@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ve.zlab.k.KCollection;
 import ve.zlab.k.KRow;
@@ -136,7 +137,11 @@ public class DynamicObject {
     }
     
     public ResponseEntity toResponse() {
-        return ResponseEntity.ok(this.toJSON());
+        return toResponse(HttpStatus.OK);
+    }
+    
+    public ResponseEntity toResponse(HttpStatus httpStatus) {
+        return ResponseEntity.status(httpStatus).body(this.toJSON());
     }
     
     public String toJSON() {
