@@ -315,6 +315,14 @@ public class KQuery {
         return this;
     }
     
+    public KQuery innerJoin(final Class<? extends KModel> clazz, final KJoin kJoin) {
+        try {
+            return innerJoin(KModelDTO.tableWithAlias(clazz.newInstance().getEntityClass()), kJoin);
+        } catch (InstantiationException | IllegalAccessException ex) {
+            return null;
+        }
+    }
+    
     public KQuery innerJoin(final String table, final KJoin kJoin) {
         if (kJoin == null) {
             return null;
@@ -403,6 +411,14 @@ public class KQuery {
         return this;
     }
 
+    public KQuery leftJoin(final Class<? extends KModel> clazz, final KJoin kJoin) {
+        try {
+            return leftJoin(KModelDTO.tableWithAlias(clazz.newInstance().getEntityClass()), kJoin);
+        } catch (InstantiationException | IllegalAccessException ex) {
+            return null;
+        }
+    }
+    
     public KQuery leftJoin(final String table, final KJoin kJoin) {
         if (kJoin == null) {
             return null;
@@ -489,6 +505,14 @@ public class KQuery {
         this.join.add(s);
 
         return this;
+    }
+    
+    public KQuery rightJoin(final Class<? extends KModel> clazz, final KJoin kJoin) {
+        try {
+            return rightJoin(KModelDTO.tableWithAlias(clazz.newInstance().getEntityClass()), kJoin);
+        } catch (InstantiationException | IllegalAccessException ex) {
+            return null;
+        }
     }
 
     public KQuery rightJoin(final String table, final KJoin kJoin) {
@@ -577,6 +601,14 @@ public class KQuery {
         this.join.add(s);
 
         return this;
+    }
+    
+    public KQuery fullJoin(final Class<? extends KModel> clazz, final KJoin kJoin) {
+        try {
+            return fullJoin(KModelDTO.tableWithAlias(clazz.newInstance().getEntityClass()), kJoin);
+        } catch (InstantiationException | IllegalAccessException ex) {
+            return null;
+        }
     }
 
     public KQuery fullJoin(final String table, final KJoin kJoin) {
