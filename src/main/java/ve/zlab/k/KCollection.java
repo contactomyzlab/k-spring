@@ -1274,4 +1274,9 @@ public class KCollection {
             kRow.logs();
         }
     }
+
+    public Map<String, Integer> getRef() {
+        return ref;
+    }
+    
 }
