@@ -526,6 +526,94 @@ public class KQuery {
 
         return this;
     }
+    
+    public KQuery fullJoinSub(final KQuery kQuery, final String alias, final KJoin kJoin) throws KException {
+        if (kQuery == null) {
+            return null;
+        }
+
+        if (kJoin == null) {
+            return null;
+        }
+
+        kJoin.setkContext(new KContext());
+
+        kJoin.execute(kJoin);
+
+        final String s = KLogic.fullJoin(kQuery, alias, kJoin);
+
+        if (s == null) {
+            return this;
+        }
+        
+        for (int i = 0 ; i < kQuery.getkContext().getParamsCount(); i++) {
+            this.kContext.addParam(kQuery.getkContext().getParam(i));
+        }
+        
+        for (int i = 0 ; i < kJoin.getkContext().getParamsCount(); i++) {
+            this.kContext.addParam(kJoin.getkContext().getParam(i));
+        }
+
+        this.join.add(s);
+
+        return this;
+    }
+    
+    public KQuery fullJoinSub(final KQuery kQuery, final String alias, final String c1, final String c2) throws KException {
+        if (kQuery == null) {
+            return null;
+        }
+
+        final String s = KLogic.fullJoin(kQuery, alias, c1, c2);
+
+        if (s == null) {
+            return this;
+        }
+        
+        for (int i = 0 ; i < kQuery.getkContext().getParamsCount(); i++) {
+            this.kContext.addParam(kQuery.getkContext().getParam(i));
+        }
+
+        this.join.add(s);
+
+        return this;
+    }
+
+    public KQuery fullJoin(final String table, final KJoin kJoin) {
+        if (kJoin == null) {
+            return null;
+        }
+
+        kJoin.setkContext(kContext);
+
+        kJoin.execute(kJoin);
+
+        final String s = KLogic.fullJoin(table, kJoin);
+
+        if (s == null) {
+            return this;
+        }
+
+        this.join.add(s);
+
+        return this;
+    }
+    
+    public KQuery fullJoin(final JoinData joinData) {
+        return this.fullJoin(joinData.getTable(), joinData.getFirstColumn(), joinData.getSecondColumn());
+    }
+
+    public KQuery fullJoin(final String table, final String c1, final String c2) {
+        final String s = KLogic.fullJoin(table, c1, c2);
+
+        if (s == null) {
+            return this;
+        }
+
+        this.join.add(s);
+
+        return this;
+    }
 
     public KQuery orderByAsc(final String... fields) {
         if (fields == null || fields.length == 0) {

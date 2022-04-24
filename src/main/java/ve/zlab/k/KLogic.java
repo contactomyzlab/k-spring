@@ -744,6 +744,10 @@ public class KLogic {
     public static String rightJoin(final String table, final String c1, final String c2) {
         return generalJoin("RIGHT JOIN", table, c1, c2);
     }
+    
+    public static String fullJoin(final String table, final String c1, final String c2) {
+        return generalJoin("FULL JOIN", table, c1, c2);
+    }
 
     public static String generalJoin(final String joinType, final String table, final String c1, final String c2) {
         if (table == null || table.isEmpty()) {
@@ -778,6 +782,10 @@ public class KLogic {
     public static String rightJoin(final String table, final KJoin kJoin) {
         return KLogic.generalJoin("RIGHT JOIN", table, kJoin);
     }
+    
+    public static String fullJoin(final String table, final KJoin kJoin) {
+        return KLogic.generalJoin("FULL JOIN", table, kJoin);
+    }
 
     public static String innerJoin(final KQuery kQuery, final String alias, final KJoin kJoin) throws KException {
         return KLogic.generalJoin("INNER JOIN", kQuery, alias, kJoin);
@@ -790,6 +798,10 @@ public class KLogic {
     public static String rightJoin(final KQuery kQuery, final String alias, final KJoin kJoin) throws KException {
         return KLogic.generalJoin("RIGHT JOIN", kQuery, alias, kJoin);
     }
+    
+    public static String fullJoin(final KQuery kQuery, final String alias, final KJoin kJoin) throws KException {
+        return KLogic.generalJoin("FULL JOIN", kQuery, alias, kJoin);
+    }
 
     public static String innerJoin(final KQuery kQuery, final String alias, final String c1, final String c2) throws KException {
         return KLogic.generalJoin("INNER JOIN", kQuery, alias, c1, c2);
@@ -801,6 +813,10 @@ public class KLogic {
 
     public static String rightJoin(final KQuery kQuery, final String alias, final String c1, final String c2) throws KException {
         return KLogic.generalJoin("RIGHT JOIN", kQuery, alias, c1, c2);
+    }
+    
+    public static String fullJoin(final KQuery kQuery, final String alias, final String c1, final String c2) throws KException {
+        return KLogic.generalJoin("FULL JOIN", kQuery, alias, c1, c2);
     }
 
     public static String generalJoin(final String joinType, final KQuery kQuery, final String alias, final KJoin kJoin) throws KException {
