@@ -38,6 +38,10 @@ public class KRule {
     public static int STRING_IN = 35;
     public static int DOUBLE_GREATER_THAN_OR_EQUAL_TO = 36;
     public static int LIST_PROPERTY_OBJECT_NOT_NULL = 37;
+    public static int STRING_ONLY_LOWERCASE_LETTERS = 38;
+    public static int STRING_ONLY_UPPERCASE_LETTERS = 39;
+    public static int STRING_LOWERCASE_LETTERS_UNDERSCORE = 40;
+    public static int STRING_UPPERCASE_LETTERS_UNDERSCORE = 41;
     
     protected String message;
     private int rule;

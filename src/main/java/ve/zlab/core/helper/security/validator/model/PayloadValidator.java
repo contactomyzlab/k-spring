@@ -191,6 +191,18 @@ public class PayloadValidator {
                         }
                         
                         break;
+                    case 38: //KRule.STRING_ONLY_LOWERCASE_LETTERS
+                        ((StringOnlyLowercaseLetters) rule).validate((String) value);
+                        break;
+                    case 39: //KRule.STRING_ONLY_UPPERCASE_LETTERS
+                        ((StringOnlyUppercaseLetters) rule).validate((String) value);
+                        break;
+                    case 40: //KRule.STRING_LOWERCASE_LETTERS_UNDERSCORE
+                        ((StringLowercaseLettersUnderscore) rule).validate((String) value);
+                        break;
+                    case 41: //KRule.STRING_UPPERCASE_LETTERS_UNDERSCORE
+                        ((StringUppercaseLettersUnderscore) rule).validate((String) value);
+                        break;
                     default:
                 }
             }

@@ -89,6 +89,22 @@ public class KRuleHelper {
         public static StringIn assertIn(final String[] list, final String message) {
             return new StringIn(list, message);
         }
+        
+        public static StringOnlyLowercaseLetters assertOnlyLowercaseLetters(final String message) {
+            return new StringOnlyLowercaseLetters(message);
+        }
+        
+        public static StringOnlyUppercaseLetters assertOnlyUppercaseLetters(final String message) {
+            return new StringOnlyUppercaseLetters(message);
+        }
+        
+        public static StringLowercaseLettersUnderscore assertLowercaseLettersUnderscore(final String message) {
+            return new StringLowercaseLettersUnderscore(message);
+        }
+        
+        public static StringUppercaseLettersUnderscore assertUppercaseLettersUnderscore(final String message) {
+            return new StringUppercaseLettersUnderscore(message);
+        }
     }
 
     public static class ObjectRule {
@@ -118,6 +134,7 @@ public class KRuleHelper {
     }
 
     public static class IntegerRule {
+        
         public static IntegerIn assertIn(final Integer[] list, final String message) {
             return new IntegerIn(list, message);
         }
