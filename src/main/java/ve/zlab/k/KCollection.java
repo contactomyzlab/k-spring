@@ -865,6 +865,10 @@ public class KCollection {
         return kCollectionCloned;
     }
     
+    public KCollection duplicate() throws KException {
+        return new KCollection(this.collection, new HashMap(this.ref), new HashMap(this.extra), table, new ArrayList<>(this.exclude));
+    }
+    
     public KCollection addProperty(final String property, final KRowFunction kRowFunction) throws KException {
         for (final KRow kRow : collection) {
             kRow.addColumn(property, kRowFunction.run(kRow));
