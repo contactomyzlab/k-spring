@@ -866,7 +866,7 @@ public class KCollection {
     }
     
     public KCollection duplicate() throws KException {
-        return new KCollection(this.collection, new HashMap(this.ref), new HashMap(this.extra), table, new ArrayList<>(this.exclude));
+        return new KCollection(new ArrayList<>(this.collection), new HashMap(this.ref), new HashMap(this.extra), table, new ArrayList<>(this.exclude));
     }
     
     public KCollection addProperty(final String property, final KRowFunction kRowFunction) throws KException {

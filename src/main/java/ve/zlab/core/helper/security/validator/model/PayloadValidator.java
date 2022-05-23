@@ -1,9 +1,16 @@
 package ve.zlab.core.helper.security.validator.model;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import javax.validation.Configuration;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -12,6 +19,17 @@ import ve.zlab.k.KException;
 import ve.zlab.k.KExecutor;
 
 public class PayloadValidator {
+    
+    private static final Validator validator;
+
+    static {
+        final Configuration<?> config = Validation.byDefaultProvider().configure();
+        final ValidatorFactory factory = config.buildValidatorFactory();
+        
+        validator = factory.getValidator();
+        
+        factory.close();
+    }
 
     protected Map<String, KRule[]> map;
     
@@ -36,6 +54,12 @@ public class PayloadValidator {
     }
 
     public void validate(final KExecutor K) throws KException {
+        final Set<ConstraintViolation<PayloadValidator>> constraintViolations = validator.validate(this);
+        
+        if (!constraintViolations.isEmpty()) {
+            throw KExceptionHelper.badRequest(new ArrayList<>(constraintViolations).get(0).getMessage());
+        }
+        
         for (final Map.Entry<String, KRule[]> entry : map.entrySet()) {
             final String property = entry.getKey();
             final KRule[] rules = entry.getValue();
