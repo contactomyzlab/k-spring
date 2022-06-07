@@ -103,7 +103,12 @@ public abstract class KSearch implements KExecutor {
     
     @Override
     public KQuery function(final String function) {
-        return new KQuery(function, true, new TransactionJPA(getEntityManager()));
+        return new KQuery(function, KQuery.FUNCTION, new TransactionJPA(getEntityManager()));
+    }
+    
+    @Override
+    public KQuery sequence(final String sequence) {
+        return new KQuery(sequence, KQuery.SEQUENCE, new TransactionJPA(getEntityManager()));
     }
     
 //    @Override

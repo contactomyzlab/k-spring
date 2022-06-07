@@ -60,10 +60,14 @@ import ve.zlab.k.transaction.ITransaction;
  * 
  */
 public class KQuery {
+    
+    public final static int TABLE = 1;
+    public final static int FUNCTION = 2;
+    public final static int SEQUENCE = 3;
 
     private Class<? extends KModelDTO> clazz;
     private KModelDTO kModel;
-    private boolean function;
+    private int type = TABLE;
     private String table;
     private List<String> select;
     private List<String> insertInto;
@@ -88,30 +92,30 @@ public class KQuery {
     private Map<String, String> extraColumnsToInsert;
     private boolean onConflictDoNothing;
     
-    public KQuery(final String table, final boolean function, final ITransaction transaction) {
+    public KQuery(final String table, final int type, final ITransaction transaction) {
         super();
 
         this.table = table;
-        this.function = function;
+        this.type = type;
         this.transaction = transaction;
         this.init();
     }
     
     public KQuery(final String table, final ITransaction transaction) {
-        this(table, false, transaction);
+        this(table, TABLE, transaction);
     }
     
     public KQuery(final ITransaction transaction, final Class<? extends KModelDTO> clazz) {
-        this(null, false, transaction);
+        this(null, TABLE, transaction);
         this.clazz = clazz;
     }
     
     public KQuery(final String table) {
-        this(table, false, null);
+        this(table, TABLE, null);
     }
     
     public KQuery(final ITransaction transaction, final KModelDTO kModel) {
-        this(null, false, transaction);
+        this(null, TABLE, transaction);
         this.kModel = kModel;
     }
 
@@ -3487,7 +3491,7 @@ public class KQuery {
     public KCollection multiple(final boolean count) throws KException {
 //        final Map<String, Integer> columns = KLogic.getColumns(this);
         
-        if (this.function) {
+        if (this.type != TABLE) {
             throw KExceptionHelper.internalServerError("Calling multiple the wrong way");
         }
         
@@ -3529,7 +3533,7 @@ public class KQuery {
     public KCollection multiple(final List<Object> values) throws KException {
 //        final Map<String, Integer> columns = KLogic.getColumns(this);
         
-        if (!this.function) {
+        if (this.type != FUNCTION) {
             throw KExceptionHelper.internalServerError("Calling multiple the wrong way");
         }
         
@@ -4739,16 +4743,48 @@ public class KQuery {
         }
     }
     
-    public KRow nextval() {
-        final String ql = KLogic.generateNextVal(this);
+    public Long nextval() {
+        if (this.type == TABLE) {
+            final String ql = KLogic.generateNextValOfTable(this);
+        
+            final IQuery query = transaction.createNativeQuery(ql);
+            
+            final Object result = query.getSingleResult();
+
+            if (result instanceof BigInteger) {
+                return ((BigInteger) result).longValue();
+            }
+
+            return (Long) result;
+        }
+        
+        if (this.type == SEQUENCE) {
+            final String ql = KLogic.generateNextValOfSequence(this);
+        
+            final IQuery query = transaction.createNativeQuery(ql);
+
+            final Object result = query.getSingleResult();
+
+            if (result instanceof BigInteger) {
+                return ((BigInteger) result).longValue();
+            }
+
+            return (Long) result;
+        }
+        
+        throw KExceptionHelper.internalServerError("Calling nextval the wrong way");
+    }
+    
+    public void createIfNotExists() {
+        if (this.type != SEQUENCE) {
+            throw KExceptionHelper.internalServerError("Calling createIfNotExists the wrong way");
+        }
+        
+        final String ql = KLogic.generateCreateSequenceIfNotExists(this);
         
         final IQuery query = transaction.createNativeQuery(ql);
 
-        return new KRow(new Object[]{
-            query.getSingleResult()
-        }, new HashMap() {{
-            put("nextval", 0);
-        }}, this.getTable());
+        query.executeUpdate();
     }
 
     /* DD */
@@ -5129,14 +5165,6 @@ public class KQuery {
 
     public void setInsertInto(List<String> insertInto) {
         this.insertInto = insertInto;
-    }
-    
-    public boolean isFunction() {
-        return function;
-    }
-
-    public void setFunction(boolean function) {
-        this.function = function;
     }
     
     public KModelDTO getKModel() {

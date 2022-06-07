@@ -7,6 +7,8 @@ import ve.zlab.k.model.KModelDTO;
 @Local
 public interface KExecutor {
     
+    public KQuery sequence(final String sequence);
+    
     public KQuery table(final String table);
     
     public KQuery table(final Class<? extends KModel> clazz);

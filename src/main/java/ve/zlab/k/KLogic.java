@@ -168,10 +168,18 @@ public class KLogic {
         return stringBuilder.toString();
     }
     
-    public static String generateNextVal(final KQuery kQuery) {
+    public static String generateNextValOfTable(final KQuery kQuery) {
         kQuery.generateNewTableName();
         
         return String.format("SELECT NEXTVAL('%s%s'\\:\\:REGCLASS)", kQuery.getTable(), "_id_seq");
+    }
+    
+    public static String generateNextValOfSequence(final KQuery kQuery) {
+        return String.format("SELECT NEXTVAL('%s'\\:\\:REGCLASS)", kQuery.getTable());
+    }
+    
+    public static String generateCreateSequenceIfNotExists(final KQuery kQuery) {
+        return String.format("CREATE SEQUENCE IF NOT EXISTS %s", kQuery.getTable());
     }
     
     public static String generateAvg(final KQuery kQuery, final String c) {
