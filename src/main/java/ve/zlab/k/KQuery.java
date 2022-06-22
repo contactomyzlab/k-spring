@@ -72,6 +72,7 @@ public class KQuery {
     private List<String> select;
     private List<String> insertInto;
     private List<String> join;
+    private List<String> with;
     private List<String> from;
     private List<String> using;
     private List<String[]> where;
@@ -123,6 +124,7 @@ public class KQuery {
         this.select = new ArrayList<>();
         this.insertInto = new ArrayList<>();
         this.join = new ArrayList<>();
+        this.with = new ArrayList<>();
         this.from = new ArrayList<>();
         this.using = new ArrayList<>();
         this.kContext = new KContext();
@@ -263,6 +265,34 @@ public class KQuery {
         }
 
         this.using.add(KModel.tableWithAlias(usingClazz));
+
+        return this;
+    }
+    
+    public KQuery with(final String name, final KQuery kQuery) throws KException {
+        if (kQuery == null || name == null || name.isBlank()) {
+            return null;
+        }
+        
+        if (!this.join.isEmpty()) {
+            throw KExceptionHelper.internalServerError("The 'with' method must not be called after a 'join' method");
+        }
+        
+        if (!this.where.isEmpty()) {
+            throw KExceptionHelper.internalServerError("The 'with' method must not be called after a 'where' method");
+        }
+
+        final String s = KLogic.with(name, kQuery);
+
+        if (s == null) {
+            return this;
+        }
+        
+        for (int i = 0 ; i < kQuery.getkContext().getParamsCount(); i++) {
+            this.kContext.addParam(kQuery.getkContext().getParam(i));
+        }
+
+        this.with.add(s);
 
         return this;
     }
@@ -5069,6 +5099,14 @@ public class KQuery {
 
     public void setJoin(List<String> join) {
         this.join = join;
+    }
+
+    public List<String> getWith() {
+        return with;
+    }
+
+    public void setWith(List<String> with) {
+        this.with = with;
     }
 
     public List<String[]> getWhere() {

@@ -75,6 +75,7 @@ public class KLogic {
     public static String generate(final KQuery kQuery) {
         kQuery.generateNewTableNameWithAlias();
         
+        final String with = KLogic.buildWithClause(kQuery);
         final String select = KLogic.buildSelect(kQuery);
         final String from = KLogic.buildFrom(kQuery);
         final String where = KLogic.buildWhere(kQuery);
@@ -85,6 +86,11 @@ public class KLogic {
         final String offset = KLogic.buildOffset(kQuery);
 
         final StringBuilder stringBuilder = new StringBuilder();
+        
+        if (with != null && !with.isEmpty()) {
+            stringBuilder.append(with);
+            stringBuilder.append(" ");
+        }
 
         stringBuilder.append(select);
 
@@ -585,6 +591,18 @@ public class KLogic {
             "USING", StringUtils.join(using, ", ")
         }, " ");
     }
+    
+    public static String buildWithClause(final KQuery kQuery) {
+        final List<String> with = kQuery.getWith();
+
+        if (with == null || with.isEmpty()) {
+            return "";
+        }
+
+        return StringUtils.join(new String[]{
+            "WITH", StringUtils.join(with, ", ")
+        }, " ");
+    }
 
     public static String buildJoin(final KQuery kQuery) {
         final List<String> join = kQuery.getJoin();
@@ -724,6 +742,20 @@ public class KLogic {
 
         return StringUtils.join(new String[]{
             "OFFSET", String.valueOf(offset)
+        }, " ");
+    }
+    
+    public static String with(final String name, final KQuery kQuery) throws KException {
+        if (kQuery == null) {
+            return null;
+        }
+
+        if (name == null || name.isBlank()) {
+            return null;
+        }
+
+        return StringUtils.join(new String[]{
+            name.trim(), "AS (", kQuery.toSubquery(), ")"
         }, " ");
     }
 
@@ -4056,14 +4088,14 @@ public class KLogic {
         }
         
         return StringUtils.join(new String[]{
-            "WITH k_to_check_x_x_x_x_ (_x_x_x_x_x_) AS (VALUES ", stringBuilder.toString() + ")"
+            "WITH k_to_check__ (_x) AS (VALUES ", stringBuilder.toString() + ")"
         }, "");
     }
     
     public static String generateBoolAndClause(final KQuery kQuery, final String property) {
         kQuery.generateNewTableNameWithAlias();
         
-        kQuery.whereEqualColumn(property, "tc._x_x_x_x_x_");
+        kQuery.whereEqualColumn(property, "ktc__._x");
         
         final String select = "SELECT 1";
         final String from = KLogic.buildFrom(kQuery);
@@ -4114,7 +4146,7 @@ public class KLogic {
         }
         
         return StringUtils.join(new String[]{
-            "SELECT BOOL_AND(EXISTS (", stringBuilder.toString(), ")) FROM k_to_check_x_x_x_x_ tc"
+            "SELECT BOOL_AND(EXISTS (", stringBuilder.toString(), ")) FROM k_to_check__ ktc__"
         }, "");
     }
     
