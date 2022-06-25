@@ -3769,10 +3769,11 @@ public class KLogic {
             stringBuilderValues.append(")");
         }
 
+        final String onConflictDoNothingClause = (kQuery.getOnConflictDoNothing()) ? "ON CONFLICT DO NOTHING" : "";
         final String returningClause = (returning) ? "RETURNING " + returningField : "";
 
         return StringUtils.join(new String[]{
-            "INSERT INTO", kQuery.getTable(), "(", stringBuilderColumn.toString(), ") VALUES", stringBuilderValues.toString(), returningClause
+            "INSERT INTO", kQuery.getTable(), "(", stringBuilderColumn.toString(), ") VALUES", stringBuilderValues.toString(), onConflictDoNothingClause, returningClause
         }, " ");
     }
     
