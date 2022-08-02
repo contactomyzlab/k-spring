@@ -4751,21 +4751,35 @@ public class KQuery {
         if (values.isEmpty()) {
             return;
         }
-
-        final String with = KLogic.buildWithClause(values);
+        
+        final List<String> columns_ = new ArrayList<>();
+        columns_.add("_x");
+        
+        final List<Map<String, Object>> valuesToWithClause = new ArrayList<>();
+        
+        for (final Object o : values) {
+            final Map<String, Object> value = new HashMap<>();
+            
+            value.put("_x", o);
+            
+            valuesToWithClause.add(value);
+        }
+        
+        final String with_ = KLogic.buildWithClause("k_to_check__", valuesToWithClause, columns_);
         final String boolAnd = KLogic.generateBoolAndClause(this, property);
 
         final String ql = StringUtils.join(new String[]{
-            with, boolAnd
+            with_, boolAnd
         }, " ");
 
-//        final Query query = entityManager.createNativeQuery(ql);
         final IQuery query = transaction.createNativeQuery(ql);
-
+        System.err.println(ql);
         int i = 1;
 
         for (final Object o : values) {
-            query.setParameter(i++, o);
+            if (o != null) {
+                query.setParameter(i++, o);
+            }
         }
 
         for (final Object o : this.kContext.getParams()) {

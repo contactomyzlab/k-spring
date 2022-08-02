@@ -92,8 +92,22 @@ public class KRow {
         return this;
     }
     
+    private String cleanC(final String c) {
+        if (c == null) {
+            return "";
+        }
+        
+        if (!c.contains(".")) {
+            return c;
+        }
+        
+        return c.substring(c.indexOf(".") + 1);
+    }
+    
     public Object get(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+                
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
@@ -111,52 +125,86 @@ public class KRow {
     }
     
     public String getString(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getString(n);
+        return this.getString(n, cleanC);
     }
     
     public String getString(final int n) {
+        return this.getString(n, null);
+    }
+    
+    private String getString(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
         
-        return (String) o[n];
+        try {
+            return (String) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"String\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"String\"");
+        }
     }
     
     public Character getCharacter(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getCharacter(n);
+        return this.getCharacter(n, cleanC);
     }
     
     public Character getCharacter(final int n) {
+        return this.getCharacter(n, null);
+    }
+    
+    private Character getCharacter(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
         
-        return (Character) o[n];
+        try {
+            return (Character) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"Character\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"Character\"");
+        }
     }
     
     public UUID getUUID(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getUUID(n);
+        return this.getUUID(n, cleanC);
     }
     
     public UUID getUUID(final int n) {
+        return this.getUUID(n, null);
+    }
+    
+    private UUID getUUID(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
@@ -169,56 +217,98 @@ public class KRow {
             return UUID.fromString((String) o[n]);
         }
         
-        return (UUID) o[n];
+        try {
+            return (UUID) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"UUID\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"UUID\"");
+        }
     }
     
     public BigDecimal getBigDecimal(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getBigDecimal(n);
+        return this.getBigDecimal(n, cleanC);
     }
     
     public BigDecimal getBigDecimal(final int n) {
+        return this.getBigDecimal(n, null);
+    }
+    
+    private BigDecimal getBigDecimal(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
         
-        return (BigDecimal) o[n];
+        try {
+            return (BigDecimal) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"BigDecimal\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"BigDecimal\"");
+        }
     }
     
     public BigInteger getBigInteger(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getBigInteger(n);
+        return this.getBigInteger(n, cleanC);
     }
     
     public BigInteger getBigInteger(final int n) {
+        return this.getBigInteger(n, null);
+    }
+    
+    private BigInteger getBigInteger(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
         
-        return (BigInteger) o[n];
+        try {
+            return (BigInteger) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"BigInteger\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"BigInteger\"");
+        }
     }
     
     public Long getLong(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getLong(n);
+        return this.getLong(n, cleanC);
     }
     
     public Long getLong(final int n) {
+        return this.getLong(n, null);
+    }
+    
+    private Long getLong(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
@@ -231,20 +321,34 @@ public class KRow {
             return ((BigInteger) o[n]).longValue();
         }
         
-        return (Long) o[n];
+        try {
+            return (Long) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"Long\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"Long\"");
+        }
     }
     
     public Integer getInteger(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getInteger(n);
+        return this.getInteger(n, cleanC);
     }
     
     public Integer getInteger(final int n) {
+        return this.getInteger(n, null);
+    }
+    
+    private Integer getInteger(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
@@ -261,64 +365,114 @@ public class KRow {
             return ((BigInteger) o[n]).intValue();
         }
         
-        return (Integer) o[n];
+        try {
+            return (Integer) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"Integer\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"Integer\"");
+        }
     }
     
     public Boolean getBoolean(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getBoolean(n);
+        return this.getBoolean(n, cleanC);
     }
     
     public Boolean getBoolean(final int n) {
+        return this.getBoolean(n, null);
+    }
+    
+    private Boolean getBoolean(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
         
-        return (Boolean) o[n];
+        try {
+            return (Boolean) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"Boolean\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"Boolean\"");
+        }
     }
     
     public Double getDouble(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getDouble(n);
+        return this.getDouble(n, cleanC);
     }
     
     public Double getDouble(final int n) {
+        return this.getDouble(n, null);
+    }
+    
+    private Double getDouble(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
-        
-        return (Double) o[n];
+
+        try {
+            return (Double) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"Double\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"Double\"");
+        }
     }
     
     public byte[] getBytea(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
         }
         
-        return this.getBytea(n);
+        return this.getBytea(n, cleanC);
     }
     
     public byte[] getBytea(final int n) {
+        return this.getBytea(n, null);
+    }
+    
+    private byte[] getBytea(final int n, final String nameRef) {
         if (n >= o.length) {
             return null;
         }
-        
-        return (byte[]) o[n];
+
+        try {
+            return (byte[]) o[n];
+        } catch (Exception e) {
+            if (nameRef != null) {
+                throw KExceptionHelper.internalServerError("'" + nameRef + "' value is not casteable to \"byte[]\"");
+            }
+            
+            throw KExceptionHelper.internalServerError("Value at position '" + n + "' is not casteable to \"byte[]\"");
+        }
     }
     
-    public Boolean isPresent(final String c) {
+    public boolean isPresent(final String c) {
         if (o == null) {
             return false;
         }
@@ -358,7 +512,7 @@ public class KRow {
         return o[n] == null;
     }
     
-    public Boolean isNullOrEmpty(final String c) {
+    public boolean isNullOrEmpty(final String c) {
         if (o == null) {
             return true;
         }
@@ -382,7 +536,7 @@ public class KRow {
         return false;
     }
     
-    public Boolean isNullOrEmpty(final int n) {
+    public boolean isNullOrEmpty(final int n) {
         if (o == null) {
             return true;
         }

@@ -4075,22 +4075,41 @@ public class KLogic {
         }, " ");
     }
     
-    public static String buildWithClause(final List<Object> d) {
-        final StringBuilder stringBuilder = new StringBuilder();
+    public static String buildWithClause(final String tableName, final List<Map<String, Object>> values, final List<String> columns) {
+        final StringBuilder stringBuilderValues = new StringBuilder();
+        final StringBuilder stringBuilderColumns = new StringBuilder();
         
-        for (int i = 0; i < d.size(); i++) {
+        stringBuilderColumns.append("(");
+        
+        for (int i = 0; i < columns.size(); i++) {
             if (i > 0) {
-                stringBuilder.append(", (?)");
-                
-                continue;
+                stringBuilderColumns.append(", ");
             }
             
-            stringBuilder.append("(?)");
+            stringBuilderColumns.append(columns.get(i));
+        }
+        
+        stringBuilderColumns.append(")");
+        
+        for (int i = 0; i < values.size(); i++) {
+            if (i > 0) {
+                stringBuilderValues.append(", ");
+            }
+            
+            stringBuilderValues.append("(");
+            
+            for (int j = 0; j < columns.size(); j++) {
+                final Object value = values.get(i).get(columns.get(j));
+                
+                stringBuilderValues.append(value != null ? "?" : "NULL");
+            }
+            
+            stringBuilderValues.append(")");
         }
         
         return StringUtils.join(new String[]{
-            "WITH k_to_check__ (_x) AS (VALUES ", stringBuilder.toString() + ")"
-        }, "");
+            "WITH", tableName, stringBuilderColumns.toString(), "AS (VALUES ", stringBuilderValues.toString(), ")"
+        }, " ");
     }
     
     public static String generateBoolAndClause(final KQuery kQuery, final String property) {
