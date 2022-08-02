@@ -4075,7 +4075,7 @@ public class KLogic {
         }, " ");
     }
     
-    public static String buildWithClause(final String tableName, final List<Map<String, Object>> values, final List<String> columns) {
+    public static String with(final String tableName, final List<String> columns, final List<Map<String, Object>> values) {
         final StringBuilder stringBuilderValues = new StringBuilder();
         final StringBuilder stringBuilderColumns = new StringBuilder();
         
@@ -4099,6 +4099,10 @@ public class KLogic {
             stringBuilderValues.append("(");
             
             for (int j = 0; j < columns.size(); j++) {
+                if (j > 0) {
+                    stringBuilderValues.append(", ");
+                }
+                
                 final Object value = values.get(i).get(columns.get(j));
                 
                 stringBuilderValues.append(value != null ? "?" : "NULL");
@@ -4108,7 +4112,7 @@ public class KLogic {
         }
         
         return StringUtils.join(new String[]{
-            "WITH", tableName, stringBuilderColumns.toString(), "AS (VALUES ", stringBuilderValues.toString(), ")"
+            tableName, stringBuilderColumns.toString(), "AS (VALUES ", stringBuilderValues.toString(), ")"
         }, " ");
     }
     

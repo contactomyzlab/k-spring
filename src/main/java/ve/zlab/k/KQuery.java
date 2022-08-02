@@ -275,7 +275,7 @@ public class KQuery {
         return this;
     }
     
-    public KQuery with(final String name, final KQuery kQuery) throws KException {
+    public KQuery with(final String name, final KQuery kQuery) {
         if (kQuery == null || name == null || name.isBlank()) {
             return null;
         }
@@ -296,6 +296,40 @@ public class KQuery {
         
         for (int i = 0 ; i < kQuery.getkContext().getParamsCount(); i++) {
             this.kContext.addParam(kQuery.getkContext().getParam(i));
+        }
+
+        this.with.add(s);
+
+        return this;
+    }
+    
+    public KQuery with(final String tableName, final List<String> columns, final List<Map<String, Object>> values) {
+        if (tableName == null || tableName.isBlank() || values == null || values.isEmpty() || columns == null || columns.isEmpty()) {
+            return null;
+        }
+        
+        if (!this.join.isEmpty()) {
+            throw KExceptionHelper.internalServerError("The 'with' method must not be called after a 'join' method");
+        }
+        
+        if (!this.where.isEmpty()) {
+            throw KExceptionHelper.internalServerError("The 'with' method must not be called after a 'where' method");
+        }
+
+        final String s = KLogic.with(tableName, columns, values);
+
+        if (s == null) {
+            return this;
+        }
+        
+        for (int i = 0; i < values.size(); i++) {
+            for (int j = 0; j < columns.size(); j++) {
+                final Object value = values.get(i).get(columns.get(j));
+
+                if (value != null) {
+                    this.kContext.addParam(value);
+                }
+            }
         }
 
         this.with.add(s);
@@ -4765,15 +4799,15 @@ public class KQuery {
             valuesToWithClause.add(value);
         }
         
-        final String with_ = KLogic.buildWithClause("k_to_check__", valuesToWithClause, columns_);
+        final String with_ = KLogic.with("k_to_check__", columns_, valuesToWithClause);
         final String boolAnd = KLogic.generateBoolAndClause(this, property);
 
         final String ql = StringUtils.join(new String[]{
-            with_, boolAnd
+            "WITH", with_, boolAnd
         }, " ");
 
         final IQuery query = transaction.createNativeQuery(ql);
-        System.err.println(ql);
+        
         int i = 1;
 
         for (final Object o : values) {

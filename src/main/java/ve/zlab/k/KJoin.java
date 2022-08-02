@@ -442,6 +442,42 @@ public abstract class KJoin {
 
         return this;
     }
+    
+    public KJoin where(final KWhere kWhere) throws KException {
+        if (kWhere == null) {
+            return null;
+        }
+
+        kWhere.setkContext(kContext);
+
+        kWhere.execute(kWhere);
+        
+        final String w = KLogic.joinWhere(KLogic.where(kWhere));
+
+        if (w != null) {
+            this.where.add(w);
+        }
+
+        return this;
+    }
+    
+    public KJoin orWhere(final KWhere kWhere) throws KException {
+        if (kWhere == null) {
+            return null;
+        }
+
+        kWhere.setkContext(kContext);
+
+        kWhere.execute(kWhere);
+
+        final String w = KLogic.joinWhere(KLogic.orWhere(kWhere));
+        
+        if (w != null) {
+            this.where.add(w);
+        }
+
+        return this;
+    }
 
     public String getOn() {
         return on;
