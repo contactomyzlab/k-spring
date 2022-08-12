@@ -276,7 +276,7 @@ public class KQuery {
     }
     
     public KQuery with(final String name, final KQuery kQuery) {
-        if (kQuery == null || name == null || name.isBlank()) {
+        if (kQuery == null || name == null || name.trim().equals("")) {
             return null;
         }
         
@@ -304,8 +304,16 @@ public class KQuery {
     }
     
     public KQuery with(final String tableName, final List<String> columns, final List<Map<String, Object>> values) {
-        if (tableName == null || tableName.isBlank() || values == null || values.isEmpty() || columns == null || columns.isEmpty()) {
-            return null;
+        if (tableName == null || tableName.trim().equals("")) {
+            throw KExceptionHelper.internalServerError("The 'tableName' is required when calling the 'with' method");
+        }
+        
+        if (columns == null || columns.isEmpty()) {
+            throw KExceptionHelper.internalServerError("The 'columns' are required when calling the 'with' method");
+        }
+        
+        if (values == null || values.isEmpty()) {
+            throw KExceptionHelper.internalServerError("The 'values' are required when calling the 'with' method");
         }
         
         if (!this.join.isEmpty()) {

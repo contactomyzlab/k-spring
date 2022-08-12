@@ -750,7 +750,7 @@ public class KLogic {
             return null;
         }
 
-        if (name == null || name.isBlank()) {
+        if (name == null || name.trim().equals("")) {
             return null;
         }
 
