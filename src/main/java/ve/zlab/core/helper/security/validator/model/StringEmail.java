@@ -24,4 +24,18 @@ public class StringEmail extends KRule {
             throw KExceptionHelper.badRequest(message);
         }
     }
+    
+    public static boolean isEmail(final String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return false;
+        }
+        
+        final Pattern pattern = Pattern.compile(EMAIL);
+        
+        if (!pattern.matcher(value).find()) {
+            return false;
+        }
+        
+        return true;
+    }
 }
