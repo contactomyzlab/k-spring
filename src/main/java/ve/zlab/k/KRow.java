@@ -491,7 +491,9 @@ public class KRow {
             return true;
         }
         
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return true;
@@ -517,7 +519,9 @@ public class KRow {
             return true;
         }
         
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return true;
@@ -529,11 +533,7 @@ public class KRow {
             return true;
         }
         
-        if (v.trim().isEmpty()) {
-            return true;
-        }
-        
-        return false;
+        return v.trim().isEmpty();
     }
     
     public boolean isNullOrEmpty(final int n) {
@@ -551,15 +551,13 @@ public class KRow {
             return true;
         }
         
-        if (v.trim().isEmpty()) {
-            return true;
-        }
-        
-        return false;
+        return v.trim().isEmpty();
     }
     
     public LocalDateTime getLocalDateTime(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
@@ -583,7 +581,9 @@ public class KRow {
     }
     
     public LocalDate getLocalDate(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
@@ -607,7 +607,9 @@ public class KRow {
     }
     
     public Date getDate(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
@@ -625,7 +627,9 @@ public class KRow {
     }
 
     public Timestamp getTimestamp(final String c) {
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             return null;
@@ -647,7 +651,9 @@ public class KRow {
             throw new KException(status, message);
         }
         
-        final Integer n = ref.get(c);
+        final String cleanC = this.cleanC(c);
+        
+        final Integer n = ref.get(cleanC);
         
         if (n == null) {
             throw new KException(status, message);
