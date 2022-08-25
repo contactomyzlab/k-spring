@@ -280,6 +280,8 @@ public class KLogic {
     public static String generateCountToExtra(final KQuery kQuery) throws KException {
         kQuery.generateNewTableNameWithAlias();
         
+        final String with = KLogic.buildWithClause(kQuery);
+        
         final String select = (!kQuery.isDistinct()) ? "SELECT COUNT(*)" : StringUtils.join(new String[]{
             "SELECT", KLogic.buildDistinctCountClause(kQuery.getDistinctOn())
         }, " ");
@@ -290,6 +292,11 @@ public class KLogic {
         final String having = KLogic.buildHaving(kQuery);
 
         final StringBuilder stringBuilder = new StringBuilder();
+        
+        if (with != null && !with.isEmpty()) {
+            stringBuilder.append(with);
+            stringBuilder.append(" ");
+        }
 
         stringBuilder.append(select);
 

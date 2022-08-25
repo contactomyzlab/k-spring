@@ -32,10 +32,6 @@ public class StringEmail extends KRule {
         
         final Pattern pattern = Pattern.compile(EMAIL);
         
-        if (!pattern.matcher(value).find()) {
-            return false;
-        }
-        
-        return true;
+        return pattern.matcher(value).find();
     }
 }
