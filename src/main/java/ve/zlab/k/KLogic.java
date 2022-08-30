@@ -276,20 +276,18 @@ public class KLogic {
 
         return stringBuilder.toString();
     }
-
+    
     public static String generateCountToExtra(final KQuery kQuery) throws KException {
         kQuery.generateNewTableNameWithAlias();
         
         final String with = KLogic.buildWithClause(kQuery);
-        
-        final String select = (!kQuery.isDistinct()) ? "SELECT COUNT(*)" : StringUtils.join(new String[]{
-            "SELECT", KLogic.buildDistinctCountClause(kQuery.getDistinctOn())
-        }, " ");
-        
         final String from = KLogic.buildFrom(kQuery);
         final String where = KLogic.buildWhere(kQuery);
-//        final String groupBy = KLogic.buildGroupBy(kQuery);
+        final String groupBy = KLogic.buildGroupBy(kQuery);
         final String having = KLogic.buildHaving(kQuery);
+        
+        final boolean wrapQuery = kQuery.isDistinct() || (groupBy != null && !groupBy.isEmpty());
+        final String select = wrapQuery ? KLogic.buildSelect(kQuery) : "SELECT COUNT(*)";
 
         final StringBuilder stringBuilder = new StringBuilder();
         
@@ -310,14 +308,20 @@ public class KLogic {
             stringBuilder.append(where);
         }
 
-//        if (groupBy != null && !groupBy.isEmpty()) {
-//            stringBuilder.append(" ");
-//            stringBuilder.append(groupBy);
-//        }
+        if (groupBy != null && !groupBy.isEmpty()) {
+            stringBuilder.append(" ");
+            stringBuilder.append(groupBy);
+        }
 
         if (having != null && !having.isEmpty()) {
             stringBuilder.append(" ");
             stringBuilder.append(having);
+        }
+        
+        if (wrapQuery) {
+            return StringUtils.join(new String[]{
+                "SELECT COUNT(*) FROM (", stringBuilder.toString() + ") AS god_bless_you"
+            }, " ");
         }
 
         return stringBuilder.toString();
