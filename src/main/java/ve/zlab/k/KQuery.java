@@ -120,7 +120,7 @@ public class KQuery {
         this.kModel = kModel;
     }
 
-    public final void init() {
+    private final void init() {
         this.select = new ArrayList<>();
         this.insertInto = new ArrayList<>();
         this.join = new ArrayList<>();

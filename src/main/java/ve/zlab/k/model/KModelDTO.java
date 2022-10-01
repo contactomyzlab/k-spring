@@ -12,7 +12,7 @@ import ve.zlab.k.annotations.KTable;
 
 public abstract class KModelDTO {
 
-    private List<String> fieldsToUpdate;
+    private final List<String> fieldsToUpdate;
     
     public KModelDTO() {
         super();

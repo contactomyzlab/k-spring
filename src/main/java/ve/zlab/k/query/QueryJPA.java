@@ -9,7 +9,7 @@ import ve.zlab.k.KRow;
 
 public class QueryJPA implements IQuery {
     
-    private Query query;
+    private final Query query;
     
     public QueryJPA(final Query query) {
         super();

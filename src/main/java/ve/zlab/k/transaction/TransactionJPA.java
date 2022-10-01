@@ -6,7 +6,7 @@ import ve.zlab.k.query.QueryJPA;
 
 public class TransactionJPA implements ITransaction {
     
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public TransactionJPA(final EntityManager entityManager) {
         super();

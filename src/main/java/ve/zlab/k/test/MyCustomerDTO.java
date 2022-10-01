@@ -1,11 +1,15 @@
 package ve.zlab.k.test;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import ve.zlab.k.annotations.Column;
 import ve.zlab.k.annotations.Id;
 import ve.zlab.k.annotations.KClass;
 import ve.zlab.k.model.KModelDTO;
 import ve.zlab.k.annotations.KTable;
 
+@Getter
+@NoArgsConstructor
 @KTable(name = "my_customer", alias = "mc")
 @KClass(entityClass = MyCustomerDTO.class, columnIdClass = Long.class)
 public class MyCustomerDTO extends KModelDTO {
@@ -23,14 +27,6 @@ public class MyCustomerDTO extends KModelDTO {
     
     @Column(name = LAST_NAME)
     private String lastName;
-    
-    public MyCustomerDTO() {
-        super();
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public MyCustomerDTO setName(String name) {
         this.name = name;
@@ -39,19 +35,11 @@ public class MyCustomerDTO extends KModelDTO {
         return this;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
     public MyCustomerDTO setLastName(String lastName) {
         this.lastName = lastName;
         this.addFieldToUpdate(LAST_NAME);
         
         return this;
-    }
-    
-    public Long getId() {
-        return id;
     }
 
     public MyCustomerDTO setId(Long id) {
