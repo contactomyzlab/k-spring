@@ -15,6 +15,8 @@ public interface KExecutor {
     
     public KQuery table(final KModelDTO kModel);
     
+    public KQuery table(final KQuery kQuery, final String alias);
+    
     public KQuery function(final String function);
     
 //    public <T> T insert(final KModel kModel);

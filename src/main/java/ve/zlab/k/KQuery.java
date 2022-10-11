@@ -119,8 +119,35 @@ public class KQuery {
         this(null, TABLE, transaction);
         this.kModel = kModel;
     }
+    
+    public KQuery(final KQuery kQuery, final String alias, final ITransaction transaction) {
+        this(null, TABLE, transaction);
+        
+        generateTableFromKQuery(kQuery, alias);
+    }
+    
+    private void generateTableFromKQuery(
+        final KQuery kQuery,
+        final String alias
+    ) {
+        if (kQuery == null) {
+            throw KExceptionHelper.internalServerError("KQuery cannot be null");
+        }
+        
+        if (alias == null || alias.trim().isEmpty()) {
+            throw KExceptionHelper.internalServerError("Alias cannot be null or empty");
+        }
+        
+        this.table = StringUtils.join(new String[]{
+            "(" + kQuery.toSubquery() + ") AS", alias
+        }, " ");
+        
+        for (int i = 0 ; i < kQuery.getkContext().getParamsCount(); i++) {
+            this.kContext.addParam(kQuery.getkContext().getParam(i));
+        }
+    }
 
-    private final void init() {
+    private void init() {
         this.select = new ArrayList<>();
         this.insertInto = new ArrayList<>();
         this.join = new ArrayList<>();

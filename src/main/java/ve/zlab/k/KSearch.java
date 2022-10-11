@@ -97,6 +97,11 @@ public abstract class KSearch implements KExecutor {
     }
     
     @Override
+    public KQuery table(final KQuery kQuery, final String alias) {
+        return new KQuery(kQuery, alias, new TransactionJPA(getEntityManager()));
+    }
+    
+    @Override
     public KQuery table(final KModelDTO kModel) {
         return new KQuery(new TransactionJPA(getEntityManager()), kModel);
     }

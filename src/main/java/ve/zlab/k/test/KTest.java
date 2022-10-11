@@ -28,6 +28,11 @@ public class KTest {
             }
             
             @Override
+            public KQuery table(final KQuery kQuery, final String alias) {
+                return new KQuery(kQuery, alias, null);
+            }
+            
+            @Override
             public KQuery table(KModelDTO kModel) {
                 return new KQuery(null, kModel);
             }
