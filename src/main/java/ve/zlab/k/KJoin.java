@@ -185,18 +185,6 @@ public abstract class KJoin {
         return this;
     }
     
-    public KJoin whereDate(final String c, final String v) {
-        final String w = KLogic.joinWhere(KLogic.whereDate(c, v));
-        
-        if (w != null) {
-            this.kContext.addParam(v);
-            
-            where.add(w);
-        }
-        
-        return this;
-    }
-    
     public KJoin whereMonth(final String c, final int v) {
         final String w = KLogic.joinWhere(KLogic.whereMonth(c, v));
         

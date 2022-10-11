@@ -1916,42 +1916,6 @@ public class KLogic {
         };
     }
 
-    public static String[] whereDate(final String c, final String v) {
-        if (c == null || c.isEmpty()) {
-            return null;
-        }
-
-        if (v == null) {
-            return null;
-        }
-
-        return new String[]{
-            AND, StringUtils.join(new String[]{
-                StringUtils.join(new String[]{
-                    c, "::date"
-                }, ""), "= ?"
-            }, " ")
-        };
-    }
-    
-    public static String[] whereNotDate(final String c, final String v) {
-        if (c == null || c.isEmpty()) {
-            return null;
-        }
-
-        if (v == null) {
-            return null;
-        }
-
-        return new String[]{
-            AND, StringUtils.join(new String[]{
-                StringUtils.join(new String[]{
-                    c, "::date"
-                }, ""), "<> ?"
-            }, " ")
-        };
-    }
-
     public static String[] whereMonth(final String c, final int v) {
         if (c == null || c.isEmpty()) {
             return null;
@@ -2571,42 +2535,6 @@ public class KLogic {
         return new String[]{
             OR, StringUtils.join(new String[]{
                 c, operation, "?"
-            }, " ")
-        };
-    }
-
-    public static String[] orWhereDate(final String c, final String v) {
-        if (c == null || c.isEmpty()) {
-            return null;
-        }
-
-        if (v == null) {
-            return null;
-        }
-
-        return new String[]{
-            OR, StringUtils.join(new String[]{
-                StringUtils.join(new String[]{
-                    c, "::date"
-                }, ""), "= ?"
-            }, " ")
-        };
-    }
-    
-    public static String[] orWhereNotDate(final String c, final String v) {
-        if (c == null || c.isEmpty()) {
-            return null;
-        }
-
-        if (v == null) {
-            return null;
-        }
-
-        return new String[]{
-            OR, StringUtils.join(new String[]{
-                StringUtils.join(new String[]{
-                    c, "::date"
-                }, ""), "<> ?"
             }, " ")
         };
     }

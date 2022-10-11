@@ -2615,66 +2615,6 @@ public class KQuery {
 
         return this;
     }
-    
-    @Deprecated
-    public KQuery whereDate(final String c, final String v) {
-        final String[] w = KLogic.whereDate(c, v);
-
-        if (w != null) {
-            this.kContext.addParam(v);
-
-            this.where.add(w);
-        } else {
-            whereNullsCount++;
-        }
-
-        return this;
-    }
-    
-    @Deprecated
-    public KQuery orWhereDate(final String c, final String v) {
-        final String[] w = KLogic.orWhereDate(c, v);
-
-        if (w != null) {
-            this.kContext.addParam(v);
-
-            this.where.add(w);
-        } else {
-            whereNullsCount++;
-        }
-
-        return this;
-    }
-
-    @Deprecated
-    public KQuery whereNotDate(final String c, final String v) {
-        final String[] w = KLogic.whereNotDate(c, v);
-
-        if (w != null) {
-            this.kContext.addParam(v);
-
-            this.where.add(w);
-        } else {
-            whereNullsCount++;
-        }
-
-        return this;
-    }
-    
-    @Deprecated
-    public KQuery orWhereNotDate(final String c, final String v) {
-        final String[] w = KLogic.orWhereNotDate(c, v);
-
-        if (w != null) {
-            this.kContext.addParam(v);
-
-            this.where.add(w);
-        } else {
-            whereNullsCount++;
-        }
-
-        return this;
-    }
 
     public KQuery whereMonth(final String c, final int v) {
         final String[] w = KLogic.whereMonth(c, v);
@@ -3715,38 +3655,12 @@ public class KQuery {
      * @param columns List of columns to be placed in the column section of the sql query
      * @param values List of values to be placed in the value section of the sql query
      * @param processors List of processors to replace the list of default parameters
-     * @deprecated will be removed in next version.
      * 
      * @return Array of long values of id column that were inserted
      * 
      */
-    @Deprecated
     public Long[] insert(final List<String> columns, final List<HashMap<String, Object>> values, final HashMap<String, String> processors) {
-        final String ql = KLogic.buildMultipleInsertInto(this, columns, values, processors);
-
-//        final Query query = entityManager.createNativeQuery(ql);
-        final IQuery query = transaction.createNativeQuery(ql);
-
-        int i = 1;
-
-        for (final Object o : kContext.getParams()) {
-            query.setParameter(i++, o);
-        }
-
-        final List<Object> os = query.getResultList();
-        final Long[] ids = new Long[os.size()];
-
-        if (os.get(0) instanceof BigInteger) {
-            for (int j = 0; j < ids.length; j++) {
-                ids[j] = ((BigInteger) os.get(j)).longValue();
-            }
-        } else {//os[0] instanceof Long
-            for (int j = 0; j < ids.length; j++) {
-                ids[j] = (Long) os.get(j);
-            }
-        }
-
-        return ids;
+        return this.insert(columns, values, processors, "id", Long.class);
     }
 
     /**
@@ -3765,32 +3679,6 @@ public class KQuery {
      */
     public Long insert(final HashMap<String, Object> d) {
         return this.insert(d, "id", Long.class);
-    }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of returningField which allows modifying the name of the column that the sql INSERT query should return.<br>
-     * This column to return must be numeric.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>?</b>, <b>?</b>, ...)
-     * RETURNING <b>returningField</b> 
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param returningField The name of the column that the sql INSERT query should return
-     * @deprecated will be removed in next version.
-     * 
-     * @return The long value of the column indicated to return
-     * 
-     */
-    @Deprecated
-    public Long insert(final HashMap<String, Object> d, final String returningField) {
-        return this.insert(d, new HashMap<>(), returningField);
     }
 
     /**
@@ -3818,457 +3706,6 @@ public class KQuery {
     public Long insert(final HashMap<String, Object> d, final HashMap<String, String> processors) {
         return this.insert(d, processors, "id", Long.class);
     }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of processors that allow us to replace 
-     * the parameters of the values section with the desired parameter, thus allowing 
-     * to embed functions within the sql query, for example, <code>?</code> can be changed by <code>LOWER(TO_JSON(?))</code>.<br>
-     * We will define the processor with the letter P.<br><br>
-     * 
-     * This method receives the concept of returningField which allows modifying the name of the column that the sql INSERT query should return.<br>
-     * This column to return must be numeric.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>P(?)</b>, <b>P(?)</b>, ...)
-     * RETURNING <b>returningField</b> 
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param processors List of processors to replace the list of default parameters
-     * @param returningField The name of the column that the sql INSERT query should return
-     * @deprecated will be removed in next version.
-     * 
-     * @return The long value of the column indicated to return
-     * 
-     */
-    @Deprecated
-    public Long insert(final HashMap<String, Object> d, final HashMap<String, String> processors, final String returningField) {
-        final String ql = KLogic.buildInsertInto(this, d, processors, true, returningField);
-
-//        final Query query = entityManager.createNativeQuery(ql);
-        final IQuery query = transaction.createNativeQuery(ql);
-
-        int i = 1;
-
-        for (final Object o : kContext.getParams()) {
-            query.setParameter(i++, o);
-        }
-
-        try {
-            final Object id = query.getSingleResult();
-
-            if (id instanceof BigInteger) {
-                return ((BigInteger) id).longValue();
-            }
-
-            return (Long) id;
-        } catch (NoResultException | NonUniqueResultException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Build and execute a SQL INSERT query with the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>?</b>, <b>?</b>, ...)
-     * RETURNING id
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @deprecated will be removed in next version.
-     * 
-     * @return The UUID value of id column that was inserted
-     * 
-     */
-    @Deprecated
-    public UUID uInsert(final HashMap<String, Object> d) {
-        return this.uInsert(d, "id");
-    }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of returningField which allows modifying the name of the column that the sql INSERT query should return.<br>
-     * This column to return must be UUID.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>?</b>, <b>?</b>, ...)
-     * RETURNING <b>returningField</b> 
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param returningField The name of the column that the sql INSERT query should return
-     * @deprecated will be removed in next version.
-     * 
-     * @return The UUID value of the column indicated to return
-     * 
-     */
-    @Deprecated
-    public UUID uInsert(final HashMap<String, Object> d, final String returningField) {
-        return this.uInsert(d, new HashMap<>(), returningField);
-    }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of processors that allow us to replace 
-     * the parameters of the values section with the desired parameter, thus allowing 
-     * to embed functions within the sql query, for example, <code>?</code> can be changed by <code>LOWER(TO_JSON(?))</code>.<br>
-     * We will define the processor with the letter P.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>P(?)</b>, <b>P(?)</b>, ...)
-     * RETURNING id
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param processors List of processors to replace the list of default parameters
-     * @deprecated will be removed in next version.
-     * 
-     * @return The UUID value of id column that was inserted
-     * 
-     */
-    @Deprecated
-    public UUID uInsert(final HashMap<String, Object> d, final HashMap<String, String> processors) {
-        return this.uInsert(d, processors, "id");
-    }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of processors that allow us to replace 
-     * the parameters of the values section with the desired parameter, thus allowing 
-     * to embed functions within the sql query, for example, <code>?</code> can be changed by <code>LOWER(TO_JSON(?))</code>.<br>
-     * We will define the processor with the letter P.<br><br>
-     * 
-     * This method receives the concept of returningField which allows modifying the name of the column that the sql INSERT query should return.<br>
-     * This column to return must be UUID.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>P(?)</b>, <b>P(?)</b>, ...)
-     * RETURNING <b>returningField</b> 
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param processors List of processors to replace the list of default parameters
-     * @param returningField The name of the column that the sql INSERT query should return
-     * @deprecated will be removed in next version.
-     * 
-     * @return The UUID value of the column indicated to return
-     * 
-     */
-    @Deprecated
-    public UUID uInsert(final HashMap<String, Object> d, final HashMap<String, String> processors, final String returningField) {
-        final String ql = KLogic.buildInsertInto(this, d, processors, true, returningField);
-
-//        final Query query = entityManager.createNativeQuery(ql);
-        final IQuery query = transaction.createNativeQuery(ql);
-
-        int i = 1;
-
-        for (final Object o : kContext.getParams()) {
-            query.setParameter(i++, o);
-        }
-
-        try {
-            final Object id = query.getSingleResult();
-
-            return (UUID) id;
-        } catch (NoResultException | NonUniqueResultException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Build and execute a SQL INSERT query with the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>?</b>, <b>?</b>, ...)
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @deprecated will be removed in next version, use {@link #insertNoReturn(java.util.HashMap)} instead.
-     * 
-     */
-    @Deprecated
-    public void nInsert(final HashMap<String, Object> d) {
-        this.nInsert(d, new HashMap<>());
-    }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of processors that allow us to replace 
-     * the parameters of the values section with the desired parameter, thus allowing 
-     * to embed functions within the sql query, for example, <code>?</code> can be changed by <code>LOWER(TO_JSON(?))</code>.<br>
-     * We will define the processor with the letter P.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>P(?)</b>, <b>P(?)</b>, ...)
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param processors List of processors to replace the list of default parameters
-     * @deprecated will be removed in next version, use {@link #insertNoReturn(java.util.HashMap, java.util.HashMap)} instead.
-     * 
-     */
-    @Deprecated
-    public void nInsert(final HashMap<String, Object> d, final HashMap<String, String> processors) {
-        final String ql = KLogic.buildInsertInto(this, d, processors, false);
-
-//        final Query query = entityManager.createNativeQuery(ql);
-        final IQuery query = transaction.createNativeQuery(ql);
-
-        int i = 1;
-
-        for (final Object o : kContext.getParams()) {
-            query.setParameter(i++, o);
-        }
-
-        query.executeUpdate();
-    }
-    
-    /**
-     * Build and execute a SQL INSERT (Multiple) query with the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>?</b>, <b>?</b>, ...), (<b>?</b>, <b>?</b>, ...), ...
-     * </pre>
-     * 
-     * @param columns Array of columns to be placed in the column section of the sql query
-     * @param values List of values to be placed in the value section of the sql query
-     * @deprecated will be removed in next version, use {@link #insertNoReturn(java.lang.String[], java.util.List)} instead.
-     * 
-     */
-    @Deprecated
-    public void nInsert(final String[] columns, final List<HashMap<String, Object>> values) {
-        this.nInsert(Arrays.asList(columns), values);
-    }
-
-    /**
-     * Build and execute a SQL INSERT (Multiple) query with the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>?</b>, <b>?</b>, ...), (<b>?</b>, <b>?</b>, ...), ...
-     * </pre>
-     * 
-     * @param columns List of columns to be placed in the column section of the sql query
-     * @param values List of values to be placed in the value section of the sql query
-     * @deprecated will be removed in next version, use {@link #insertNoReturn(java.util.List, java.util.List)} instead.
-     * 
-     */
-    @Deprecated
-    public void nInsert(final List<String> columns, final List<HashMap<String, Object>> values) {
-        this.nInsert(columns, values, new HashMap<>());
-    }
-
-    /**
-     * Build and execute a SQL INSERT (Multiple) query.<br><br>
-     * 
-     * This method receives the concept of processors that allow us to replace 
-     * the parameters of the values section with the desired parameter, thus allowing 
-     * to embed functions within the sql query, for example, <code>?</code> can be changed by <code>LOWER(TO_JSON(?))</code>.<br>
-     * We will define the processor with the letter P.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>P(?)</b>, <b>P(?)</b>, ...), (<b>P(?)</b>, <b>P(?)</b>, ...), ...
-     * </pre>
-     * 
-     * @param columns Array of columns to be placed in the column section of the sql query
-     * @param values List of values to be placed in the value section of the sql query
-     * @param processors List of processors to replace the list of default parameters
-     * @deprecated will be removed in next version, use {@link #insertNoReturn(java.lang.String[], java.util.List, java.util.HashMap)} instead.
-     * 
-     */
-    @Deprecated
-    public void nInsert(final String[] columns, final List<HashMap<String, Object>> values, final HashMap<String, String> processors) {
-        this.nInsert(Arrays.asList(columns), values, processors);
-    }
-
-    /**
-     * Build and execute a SQL INSERT (Multiple) query.<br><br>
-     * 
-     * This method receives the concept of processors that allow us to replace 
-     * the parameters of the values section with the desired parameter, thus allowing 
-     * to embed functions within the sql query, for example, <code>?</code> can be changed by <code>LOWER(TO_JSON(?))</code>.<br>
-     * We will define the processor with the letter P.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>P(?)</b>, <b>P(?)</b>, ...), (<b>P(?)</b>, <b>P(?)</b>, ...), ...
-     * </pre>
-     * 
-     * @param columns List of columns to be placed in the column section of the sql query
-     * @param values List of values to be placed in the value section of the sql query
-     * @param processors List of processors to replace the list of default parameters
-     * @deprecated will be removed in next version, use {@link #insertNoReturn(java.util.List, java.util.List, java.util.HashMap)} instead.
-     * 
-     */
-    @Deprecated
-    public void nInsert(final List<String> columns, final List<HashMap<String, Object>> values, final HashMap<String, String> processors) {
-        final String ql = KLogic.buildMultipleInsertInto(this, columns, values, processors, false);
-
-//        final Query query = entityManager.createNativeQuery(ql);
-        final IQuery query = transaction.createNativeQuery(ql);
-
-        int i = 1;
-
-        for (final Object o : kContext.getParams()) {
-            query.setParameter(i++, o);
-        }
-
-        query.executeUpdate();
-    }
-    
-    /**
-     * Build and execute a SQL INSERT query with the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>?</b>, <b>?</b>, ...)
-     * RETURNING id
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @deprecated will be removed in next version.
-     * 
-     * @return The String value of id column that was inserted
-     * 
-     */
-    @Deprecated
-    public String sInsert(final HashMap<String, Object> d) {
-        return this.sInsert(d, "id");
-    }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of returningField which allows modifying the name of the column that the sql INSERT query should return.<br>
-     * This column to return must be String.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>?</b>, <b>?</b>, ...)
-     * RETURNING <b>returningField</b> 
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param returningField The name of the column that the sql INSERT query should return
-     * @deprecated will be removed in next version.
-     * 
-     * @return The String value of the column indicated to return
-     * 
-     */
-    @Deprecated
-    public String sInsert(final HashMap<String, Object> d, final String returningField) {
-        return this.sInsert(d, new HashMap<>(), returningField);
-    }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of processors that allow us to replace 
-     * the parameters of the values section with the desired parameter, thus allowing 
-     * to embed functions within the sql query, for example, <code>?</code> can be changed by <code>LOWER(TO_JSON(?))</code>.<br>
-     * We will define the processor with the letter P.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>P(?)</b>, <b>P(?)</b>, ...)
-     * RETURNING id
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param processors List of processors to replace the list of default parameters
-     * @deprecated will be removed in next version.
-     * 
-     * @return The String value of id column that was inserted
-     * 
-     */
-    @Deprecated
-    public String sInsert(final HashMap<String, Object> d, final HashMap<String, String> processors) {
-        return this.sInsert(d, processors, "id");
-    }
-
-    /**
-     * Build and execute a SQL INSERT query.<br><br>
-     * 
-     * This method receives the concept of processors that allow us to replace 
-     * the parameters of the values section with the desired parameter, thus allowing 
-     * to embed functions within the sql query, for example, <code>?</code> can be changed by <code>LOWER(TO_JSON(?))</code>.<br>
-     * We will define the processor with the letter P.<br><br>
-     * 
-     * This method receives the concept of returningField which allows modifying the name of the column that the sql INSERT query should return.<br>
-     * This column to return must be String.<br><br>
-     * 
-     * The sql INSERT query has the following syntax:<br><br>
-     * 
-     * <pre>
-     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
-     * VALUES (<b>P(?)</b>, <b>P(?)</b>, ...)
-     * RETURNING <b>returningField</b> 
-     * </pre>
-     * 
-     * @param d List of columns and values to be placed in the column and value section of the sql query
-     * @param processors List of processors to replace the list of default parameters
-     * @param returningField The name of the column that the sql INSERT query should return
-     * @deprecated will be removed in next version.
-     * 
-     * @return The String value of the column indicated to return
-     * 
-     */
-    @Deprecated
-    public String sInsert(final HashMap<String, Object> d, final HashMap<String, String> processors, final String returningField) {
-        final String ql = KLogic.buildInsertInto(this, d, processors, true, returningField);
-
-//        final Query query = entityManager.createNativeQuery(ql);
-        final IQuery query = transaction.createNativeQuery(ql);
-
-        int i = 1;
-
-        for (final Object o : kContext.getParams()) {
-            query.setParameter(i++, o);
-        }
-
-        try {
-            final Object id = query.getSingleResult();
-
-            return (String) id;
-        } catch (NoResultException | NonUniqueResultException e) {
-            return null;
-        }
-    }
     
     /* Insert V2 */
     public <T> T insert(final HashMap<String, Object> d, final String returningField, final Class<T> clazz) {
@@ -4295,18 +3732,78 @@ public class KQuery {
         }
     }
 
+    /**
+     * Build and execute a SQL INSERT (Multiple) query with the following syntax:<br><br>
+     * 
+     * <pre>
+     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
+     * VALUES (<b>?</b>, <b>?</b>, ...), (<b>?</b>, <b>?</b>, ...), ...
+     * RETURNING id
+     * </pre>
+     * 
+     * @param columns Array of columns to be placed in the column section of the sql query
+     * @param values List of values to be placed in the value section of the sql query
+     * 
+     * @return Array of long values of id column that were inserted
+     * 
+     */
     public <T> T[] insert(final String[] columns, final List<HashMap<String, Object>> values, final String returningField, final Class<T> clazz) {
         return this.insert(Arrays.asList(columns), values, returningField, clazz);
     }
 
+    /**
+     * Build and execute a SQL INSERT (Multiple) query with the following syntax:<br><br>
+     * 
+     * <pre>
+     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
+     * VALUES (<b>?</b>, <b>?</b>, ...), (<b>?</b>, <b>?</b>, ...), ...
+     * RETURNING id
+     * </pre>
+     * 
+     * @param columns Array of columns to be placed in the column section of the sql query
+     * @param values List of values to be placed in the value section of the sql query
+     * 
+     * @return Array of long values of id column that were inserted
+     * 
+     */
     public <T> T[] insert(final List<String> columns, final List<HashMap<String, Object>> values, final String returningField, final Class<T> clazz) {
         return this.insert(columns, values, new HashMap<>(), returningField, clazz);
     }
 
+    /**
+     * Build and execute a SQL INSERT (Multiple) query with the following syntax:<br><br>
+     * 
+     * <pre>
+     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
+     * VALUES (<b>?</b>, <b>?</b>, ...), (<b>?</b>, <b>?</b>, ...), ...
+     * RETURNING id
+     * </pre>
+     * 
+     * @param columns Array of columns to be placed in the column section of the sql query
+     * @param values List of values to be placed in the value section of the sql query
+     * 
+     * @return Array of long values of id column that were inserted
+     * 
+     */
     public <T> T[] insert(final String[] columns, final List<HashMap<String, Object>> values, final HashMap<String, String> processors, final String returningField, final Class<T> clazz) {
         return this.insert(Arrays.asList(columns), values, processors, returningField, clazz);
     }
 
+    /**
+     * Build and execute a SQL INSERT (Multiple) query with the following syntax:<br><br>
+     * 
+     * <pre>
+     * INSERT INTO <b>table</b> (<b>column1</b>, <b>column2</b>, ...)
+     * VALUES (<b>?</b>, <b>?</b>, ...), (<b>?</b>, <b>?</b>, ...), ...
+     * RETURNING id
+     * </pre>
+     * 
+     * @param columns Array of columns to be placed in the column section of the sql query
+     * @param values List of values to be placed in the value section of the sql query
+     * 
+     * @return Array of long values of id column that were inserted
+     * 
+     */
     public <T> T[] insert(final List<String> columns, final List<HashMap<String, Object>> values, final HashMap<String, String> processors, final String returningField, final Class<T> clazz) {
         final String ql = KLogic.buildMultipleInsertInto(this, columns, values, processors, true, returningField.trim());
 
@@ -4584,14 +4081,15 @@ public class KQuery {
      * </pre>
      * 
      * @param d List of columns and values to be placed in the set section of the sql query
+     * @return the number of entities updated
      * 
      * @throws ve.zlab.k.KException It will be thrown when at least one of the conditions supplied 
      * to the where clause of the query is rejected because it is a null value. This is to 
      * protect against executing a query update without conditionals on a table in the wrong way.
      * 
      */
-    public void update(final Map<String, Object> d) throws KException {
-        this.update(d, new HashMap<>());
+    public int update(final Map<String, Object> d) throws KException {
+        return this.update(d, new HashMap<>());
     }
 
     /**
@@ -4613,13 +4111,14 @@ public class KQuery {
      * 
      * @param d List of columns and values to be placed in the set section of the sql query
      * @param processors List of processors to replace the list of default parameters
+     * @return the number of entities updated
      * 
      * @throws ve.zlab.k.KException It will be thrown when at least one of the conditions supplied 
      * to the where clause of the query is rejected because it is a null value. This is to 
      * protect against executing a query update without conditionals on a table in the wrong way.
      * 
      */
-    public void update(final Map<String, Object> d, final HashMap<String, String> processors) throws KException {
+    public int update(final Map<String, Object> d, final HashMap<String, String> processors) throws KException {
         if (whereNullsCount > 0) {
             throw new KException(HttpStatus.INTERNAL_SERVER_ERROR, "The query cannot be executed for protection. A condition has a null value");
         }
@@ -4635,7 +4134,7 @@ public class KQuery {
             query.setParameter(i++, o);
         }
 
-        query.executeUpdate();
+        return query.executeUpdate();
     }
 
     /**
@@ -4656,14 +4155,15 @@ public class KQuery {
      * @param fromValues List of values to be placed in the from clause
      * @param fromColumns List of columns to be placed in the from clause
      * @param d List of columns and values to be placed in the set section of the sql query
+     * @return the number of entities updated
      * 
      * @throws ve.zlab.k.KException It will be thrown when at least one of the conditions supplied 
      * to the where clause of the query is rejected because it is a null value. This is to 
      * protect against executing a query update without conditionals on a table in the wrong way.
      * 
      */
-    public void update(final List<Map<String, Object>> fromValues, final String[] fromColumns, final Map<String, Object> d) throws KException {
-        this.update(fromValues, fromColumns, d, new HashMap<>());
+    public int update(final List<Map<String, Object>> fromValues, final String[] fromColumns, final Map<String, Object> d) throws KException {
+        return this.update(fromValues, fromColumns, d, new HashMap<>());
     }
 
     /**
@@ -4690,13 +4190,14 @@ public class KQuery {
      * @param fromColumns List of columns to be placed in the from clause
      * @param d List of columns and values to be placed in the set section of the sql query
      * @param processors List of processors to replace the list of default parameters
+     * @return the number of entities updated
      * 
      * @throws ve.zlab.k.KException It will be thrown when at least one of the conditions supplied 
      * to the where clause of the query is rejected because it is a null value. This is to 
      * protect against executing a query update without conditionals on a table in the wrong way.
      * 
      */
-    public void update(final List<Map<String, Object>> fromValues, final String[] fromColumns, final Map<String, Object> d, final HashMap<String, String> processors) throws KException {
+    public int update(final List<Map<String, Object>> fromValues, final String[] fromColumns, final Map<String, Object> d, final HashMap<String, String> processors) throws KException {
         if (whereNullsCount > 0) {
             throw new KException(HttpStatus.INTERNAL_SERVER_ERROR, "The query cannot be executed for protection. A condition has null value");
         }
@@ -4712,10 +4213,10 @@ public class KQuery {
             query.setParameter(i++, o);
         }
 
-        query.executeUpdate();
+        return query.executeUpdate();
     }
     
-    public void update() throws KException {
+    public int update() throws KException {
         if (kModel == null) {
             throw KExceptionHelper.internalServerError("The KModel cannot be null");
         }
@@ -4738,19 +4239,20 @@ public class KQuery {
             query.setParameter(i++, o);
         }
 
-        query.executeUpdate();
+        return query.executeUpdate();
     }
 
     /**
      * Build and run a SQL DELETE query based on the created sql query.<br>
      * This method ignores any column added to the SELECT clause.
      * 
+     * @return the number of entities deleted
      * @throws ve.zlab.k.KException It will be thrown when at least one of the conditions supplied 
      * to the where clause of the query is rejected because it is a null value. This is to 
      * protect against executing a query update without conditionals on a table in the wrong way.
      * 
      */
-    public void delete() throws KException {
+    public int delete() throws KException {
         if (whereNullsCount > 0) {
             throw new KException(HttpStatus.INTERNAL_SERVER_ERROR, "The query cannot be executed for protection. A condition has null value");
         }
@@ -4769,7 +4271,7 @@ public class KQuery {
             query.setParameter(i++, o);
         }
 
-        query.executeUpdate();
+        return query.executeUpdate();
     }
 
     /* TRUNCATE */

@@ -1523,54 +1523,6 @@ public abstract class KWhere {
         return this;
     }
     
-    public KWhere whereDate(final String c, final String v) {
-        final String[] w =  KLogic.whereDate(c, v);
-        
-        if (w != null) {
-            this.kContext.addParam(v);
-            
-            where.add(w);
-        }
-        
-        return this;
-    }
-    
-    public KWhere orWhereDate(final String c, final String v) {
-        final String[] w =  KLogic.orWhereDate(c, v);
-        
-        if (w != null) {
-            this.kContext.addParam(v);
-            
-            where.add(w);
-        }
-        
-        return this;
-    }
-    
-    public KWhere whereNotDate(final String c, final String v) {
-        final String[] w = KLogic.whereNotDate(c, v);
-
-        if (w != null) {
-            this.kContext.addParam(v);
-
-            this.where.add(w);
-        }
-
-        return this;
-    }
-    
-    public KWhere orWhereNotDate(final String c, final String v) {
-        final String[] w = KLogic.orWhereNotDate(c, v);
-
-        if (w != null) {
-            this.kContext.addParam(v);
-
-            this.where.add(w);
-        }
-
-        return this;
-    }
-    
     public KWhere whereMonth(final String c, final int v) {
         final String[] w =  KLogic.whereMonth(c, v);
         
