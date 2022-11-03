@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import org.apache.commons.lang3.StringUtils;
@@ -910,15 +909,27 @@ public class KQuery {
         return this;
     }
 
-    public KQuery whereRaw(final String c) {
+    public KQuery whereRaw(final String c, final Object... value) {
         this.where.add(KLogic.whereRaw(c));
+        
+        if (value != null) {
+            for (final Object v : value) {
+                this.kContext.addParam(v);
+            }
+        }
 
         return this;
     }
     
-    public KQuery orWhereRaw(final String c) {
+    public KQuery orWhereRaw(final String c, final Object... value) {
         this.where.add(KLogic.orWhereRaw(c));
 
+        if (value != null) {
+            for (final Object v : value) {
+                this.kContext.addParam(v);
+            }
+        }
+        
         return this;
     }
     
