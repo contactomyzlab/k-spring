@@ -30,4 +30,6 @@ public interface KExecutor {
     public void deleteById(final KCollection kCollection) throws KException;
     
     public void deleteById(final KRow kRow) throws KException;
+    
+    public KSearch use(final String entityManagerName);
 }

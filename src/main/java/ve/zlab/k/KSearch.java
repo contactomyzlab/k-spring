@@ -1,6 +1,8 @@
 package ve.zlab.k;
 
+import java.util.Map;
 import javax.persistence.EntityManager;
+import ve.zlab.k.helper.KExceptionHelper;
 import ve.zlab.k.model.KModel;
 import ve.zlab.k.model.KModelDTO;
 import ve.zlab.k.transaction.TransactionJPA;
@@ -51,7 +53,15 @@ import ve.zlab.k.transaction.TransactionJPA;
 
 public abstract class KSearch implements KExecutor {
     
-    public abstract EntityManager getEntityManager();
+    public abstract String getEntityManagerDefaultName();
+    public abstract String getCurrentEntityManagerName();
+    public abstract Map<String, EntityManager> getEntityManagers();
+    
+    public boolean useCurrentEntityManagerName() {
+        return false;
+    }
+    
+    private String entityManagerName = null;
 
     public KSearch() {
         super();
@@ -156,5 +166,25 @@ public abstract class KSearch implements KExecutor {
         new KQuery(kRow.getTable(), new TransactionJPA(getEntityManager())).
             where("id", kRow.getLong("id")).
             delete();
+    }
+    
+    @Override
+    public KSearch use(final String entityManagerName) {
+        this.entityManagerName = entityManagerName;
+        
+        return this;
+    }
+    
+    private EntityManager getEntityManager() {
+        final String name = this.entityManagerName != null ? this.entityManagerName : (this.useCurrentEntityManagerName() ? this.getCurrentEntityManagerName() : this.getEntityManagerDefaultName());
+        
+        final EntityManager entityManager = this.getEntityManagers().get(name);
+        
+        
+        if (entityManager == null) {
+            throw KExceptionHelper.internalServerError("EntityManager provided can not be null");
+        }
+        
+        return entityManager;
     }
 }

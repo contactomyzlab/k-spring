@@ -5,6 +5,7 @@ import ve.zlab.k.KExecutor;
 import ve.zlab.k.KQuery;
 import ve.zlab.k.KRaw;
 import ve.zlab.k.KRow;
+import ve.zlab.k.KSearch;
 import ve.zlab.k.model.KModelDTO;
 import ve.zlab.k.model.KModel;
 
@@ -59,6 +60,11 @@ public class KTest {
 
             @Override
             public KQuery sequence(String sequence) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public KSearch use(String entityManagerName) {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         };
