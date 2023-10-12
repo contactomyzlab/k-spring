@@ -2,6 +2,7 @@ package ve.zlab.k.test;
 
 import ve.zlab.k.KException;
 import ve.zlab.k.KExecutor;
+import ve.zlab.k.KRaw;
 
 public class KExample {
     
@@ -15,19 +16,29 @@ public class KExample {
 //            toKQuery(K).
 //            insert();
 //        
-//        K.
-//        table(MyBook.class).
-//        leftJoin(MyBook.withMyCustomer()).
-//        select(
-//            MyBook.ID,
+        K.
+        table(MyBook.class).
+        leftJoin(MyBook.withMyCustomer()).
+        select(
+            MyBook.ID
 //            MyCustomer.ID("customerId"),
 //            MyCustomer.LAST_NAME("customerLastName")
-//        ).
-//        where(MyCustomer.ID, 7L).
-//        whereGreaterThan(MyBook.ID, 2L).
-//        whereILikeAny(MyCustomer.LAST_NAME, "JHON").
-//        where(MyBook.NAME, "ads").
-//        dd();
+        )
+        .select(
+            new KRaw("lower(?)", "hola"),
+            new KRaw("upper('chao')"),
+            new KRaw("unaccent(?)", "2222")
+        )
+        .select(
+//            MyBook.ID
+            MyCustomer.ID("customerId")
+//            MyCustomer.LAST_NAME("customerLastName")
+        ).
+        where(MyCustomer.ID, 7L).
+        whereGreaterThan(MyBook.ID, 2L).
+        whereILikeAny(MyCustomer.LAST_NAME, "JHON").
+        where(MyBook.NAME, "ads").
+        dd();
 //        
 //        K.
 //        table("my_book mb").

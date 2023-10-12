@@ -220,6 +220,23 @@ public class KQuery {
 
         return this;
     }
+    
+    public KQuery select(final KRaw... raws) throws KException {
+        if (raws == null || raws.length == 0) {
+            return this;
+        }
+        
+        for (final KRaw raw : raws) {
+            this.columns.put(raw.getRaw(), indexColumn++);
+            this.select.add(raw.getRaw());
+            
+            for (final Object param : raw.getParams()) {
+                this.kContext.addParam(param);
+            }
+        }
+
+        return this;
+    }
 
     public KQuery select(final List<String> cs) throws KException {
         if (cs == null || cs.isEmpty()) {
