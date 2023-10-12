@@ -227,7 +227,9 @@ public class KQuery {
         }
         
         for (final KRaw raw : raws) {
-            this.columns.put(raw.getRaw(), indexColumn++);
+            final SelectDataExtracted extracted = KLogic.extractSelectData(raw.getRaw());
+            
+            this.columns.put(extracted.getColumnName(), indexColumn++);
             this.select.add(raw.getRaw());
             
             for (final Object param : raw.getParams()) {

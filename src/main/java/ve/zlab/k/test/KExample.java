@@ -20,12 +20,12 @@ public class KExample {
         table(MyBook.class).
         leftJoin(MyBook.withMyCustomer()).
         select(
-            MyBook.ID
-//            MyCustomer.ID("customerId"),
+            MyBook.ID,
+            MyCustomer.ID("customerId")
 //            MyCustomer.LAST_NAME("customerLastName")
         )
         .select(
-            new KRaw("lower(?)", "hola"),
+            new KRaw("lower(?) AS l", "hola"),
             new KRaw("upper('chao')"),
             new KRaw("unaccent(?)", "2222")
         )
