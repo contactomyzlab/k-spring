@@ -30,12 +30,7 @@ public class KExample {
             new KRaw("upper('chao')"),
             new KRaw("unaccent(?)", "2222")
         )
-        .select(
-//            MyBook.ID
-            MyCustomer.ID("customerId")
-//            MyCustomer.LAST_NAME("customerLastName")
-        ).
-        where(MyCustomer.ID, 7L).
+        .where(MyCustomer.ID, 7L).
                 where(new KWhere() {
             @Override
             public KWhere execute(KWhere kWhere) throws KException {
