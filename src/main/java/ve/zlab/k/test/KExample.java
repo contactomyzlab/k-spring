@@ -3,6 +3,7 @@ package ve.zlab.k.test;
 import ve.zlab.k.KException;
 import ve.zlab.k.KExecutor;
 import ve.zlab.k.KRaw;
+import ve.zlab.k.KWhere;
 
 public class KExample {
     
@@ -35,6 +36,15 @@ public class KExample {
 //            MyCustomer.LAST_NAME("customerLastName")
         ).
         where(MyCustomer.ID, 7L).
+                where(new KWhere() {
+            @Override
+            public KWhere execute(KWhere kWhere) throws KException {
+                return
+                    kWhere
+                        .whereRaw("x = ?", "hola1")
+                        .orWhereRaw("y = ?", 2);
+            }
+        }).
         whereGreaterThan(MyBook.ID, 2L).
         whereILikeAny(MyCustomer.LAST_NAME, "JHON").
         where(MyBook.NAME, "ads").

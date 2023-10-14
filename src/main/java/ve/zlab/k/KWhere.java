@@ -23,14 +23,26 @@ public abstract class KWhere {
         this.where = new ArrayList<>();
     }
     
-    public KWhere whereRaw(final String c) {
+    public KWhere whereRaw(final String c, final Object... value) {
         where.add(KLogic.whereRaw(c));
+        
+        if (value != null) {
+            for (final Object v : value) {
+                this.kContext.addParam(v);
+            }
+        }
         
         return this;
     }
     
-    public KWhere orWhereRaw(final String c) {
+    public KWhere orWhereRaw(final String c, final Object... value) {
         where.add(KLogic.orWhereRaw(c));
+        
+        if (value != null) {
+            for (final Object v : value) {
+                this.kContext.addParam(v);
+            }
+        }
         
         return this;
     }
