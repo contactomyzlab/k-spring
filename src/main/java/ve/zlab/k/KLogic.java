@@ -286,8 +286,8 @@ public class KLogic {
         final String groupBy = KLogic.buildGroupBy(kQuery);
         final String having = KLogic.buildHaving(kQuery);
         
-        final boolean wrapQuery = kQuery.isDistinct() || (groupBy != null && !groupBy.isEmpty());
-        final String select = wrapQuery ? KLogic.buildSelect(kQuery) : "SELECT COUNT(*)";
+        final boolean wrapQuery = true;//kQuery.isDistinct() || (groupBy != null && !groupBy.isEmpty())
+        final String select = KLogic.buildSelect(kQuery);//wrapQuery ? KLogic.buildSelect(kQuery) : "SELECT COUNT(*)"
 
         final StringBuilder stringBuilder = new StringBuilder();
         

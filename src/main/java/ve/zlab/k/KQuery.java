@@ -91,7 +91,6 @@ public class KQuery {
     private Map<String, String> processors;
     private Map<String, String> extraColumnsToInsert;
     private boolean onConflictDoNothing;
-    private List<Integer> indexParamsAddedInSelect;
     
     public KQuery(final String table, final int type, final ITransaction transaction) {
         super();
@@ -167,7 +166,6 @@ public class KQuery {
         this.processors = new HashMap<>();
         this.extraColumnsToInsert = new HashMap<>();
         this.onConflictDoNothing = false;
-        this.indexParamsAddedInSelect = new ArrayList<>();
     }
     
     public KQuery addProcessor(final String key, final String value) throws KException {
@@ -236,8 +234,6 @@ public class KQuery {
             
             for (final Object param : raw.getParams()) {
                 this.kContext.addParam(param);
-                
-                this.indexParamsAddedInSelect.add(this.kContext.getParamsCount());
             }
         }
 
@@ -3594,14 +3590,9 @@ public class KQuery {
             final IQuery queryToCount = transaction.createNativeQuery(qlToCount);
 
             i = 1;
-            int j = 1;
 
             for (final Object o : this.kContext.getParams()) {
-                if (!this.indexParamsAddedInSelect.contains(i)) {
-                    queryToCount.setParameter(j++, o);
-                }
-                
-                i++;
+                queryToCount.setParameter(i++, o);
             }
 
             return kCollection.addExtra("total", queryToCount.getSingleResult());
@@ -4466,11 +4457,6 @@ public class KQuery {
         System.out.println("Columnas: >>>>");
         for (final Map.Entry<String, Integer> c : this.columns.entrySet()) {
             System.out.println("Columna '" + c.getKey() + "' Indice: " + c.getValue());
-        }
-        
-        System.out.println("Index Params Added In Select: >>>>");
-        for (final Integer value : this.indexParamsAddedInSelect) {
-            System.out.println(value);
         }
     }
     
