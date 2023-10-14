@@ -3594,10 +3594,11 @@ public class KQuery {
             final IQuery queryToCount = transaction.createNativeQuery(qlToCount);
 
             i = 1;
+            int j = 1;
 
             for (final Object o : this.kContext.getParams()) {
                 if (!this.indexParamsAddedInSelect.contains(i)) {
-                    queryToCount.setParameter(i, o);
+                    queryToCount.setParameter(j++, o);
                 }
                 
                 i++;
